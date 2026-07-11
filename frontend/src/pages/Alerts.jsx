@@ -1,13 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiRefreshCw, FiAlertTriangle, FiAlertCircle, FiCheckCircle, FiUsers, FiSearch } from 'react-icons/fi';
+import { FiRefreshCw, FiSearch } from 'react-icons/fi';
 import useAlerts from '../hooks/useAlerts';
 import { getCurrentDate } from '../utils/dateTime';
 import Loader from '../components/common/Loader';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Select from '../components/common/Select';
-import AlertCard from '../components/alerts/AlertCard';
 import AlertTable from '../components/alerts/AlertTable';
 import { ALERT_SEVERITIES, ALERT_STATUSES } from '../utils/constants';
 import './Alerts.css';
@@ -15,8 +14,8 @@ import './Alerts.css';
 export default function Alerts() {
   const navigate = useNavigate();
   const {
-    alerts, loading, error, pagination, summary,
-    loadAlerts, loadSummary, refresh,
+    alerts, loading, error, pagination,
+    loadAlerts, refresh,
   } = useAlerts();
 
   const [severityFilter, setSeverityFilter] = useState('');
@@ -25,8 +24,7 @@ export default function Alerts() {
 
   useEffect(() => {
     loadAlerts();
-    loadSummary();
-  }, [loadAlerts, loadSummary]);
+  }, [loadAlerts]);
 
   const handleRefresh = useCallback(() => {
     refresh();
@@ -54,13 +52,6 @@ export default function Alerts() {
     navigate(`/alerts/${alert.id}`);
   }, [navigate]);
 
-  const summaryCards = summary ? [
-    { icon: <FiAlertTriangle size={20} />, title: 'Total Open', value: summary.totalOpen ?? '—', color: 'var(--color-warning)' },
-    { icon: <FiAlertCircle size={20} />, title: 'Critical', value: summary.critical ?? '—', color: 'var(--color-danger)' },
-    { icon: <FiUsers size={20} />, title: 'Assigned', value: summary.assigned ?? '—', color: 'var(--color-primary)' },
-    { icon: <FiCheckCircle size={20} />, title: 'Resolved Today', value: summary.resolvedToday ?? '—', color: 'var(--color-success)' },
-  ] : [];
-
   return (
     <div className="alerts">
       <div className="alerts__header">
@@ -83,8 +74,6 @@ export default function Alerts() {
         </div>
       )}
 
-      {summary && <AlertCard cards={summaryCards} />}
-
       <div className="alerts__filters">
         <div className="alerts__filters-search">
           <FiSearch size={16} className="alerts__filters-search-icon" />
@@ -94,18 +83,22 @@ export default function Alerts() {
             onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
-        <Select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
-          <option value="">All Severities</option>
-          {Object.values(ALERT_SEVERITIES).map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </Select>
-        <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-          <option value="">All Statuses</option>
-          {Object.values(ALERT_STATUSES).map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </Select>
+        <Select
+          value={severityFilter}
+          onChange={(e) => setSeverityFilter(e.target.value)}
+          options={[
+            { value: '', label: 'All Severities' },
+            ...Object.values(ALERT_SEVERITIES).map((s) => ({ value: s, label: s })),
+          ]}
+        />
+        <Select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          options={[
+            { value: '', label: 'All Statuses' },
+            ...Object.values(ALERT_STATUSES).map((s) => ({ value: s, label: s })),
+          ]}
+        />
         <Button variant="primary" size="sm" onClick={handleFilterApply}>
           Apply Filters
         </Button>

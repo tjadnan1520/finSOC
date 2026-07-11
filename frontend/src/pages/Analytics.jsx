@@ -12,6 +12,7 @@ import Button from '../components/common/Button';
 import Select from '../components/common/Select';
 import Input from '../components/common/Input';
 import Loader from '../components/common/Loader';
+import { PROVIDERS } from '../utils/constants';
 import './Analytics.css';
 
 function formatDate(date) {
@@ -105,8 +106,8 @@ export default function Analytics() {
         <div className="analytics-filter-group">
           <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} placeholder="From" />
           <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} placeholder="To" />
-          <Select value={providerFilter} onChange={(e) => setProviderFilter(e.target.value)} placeholder="All Providers" options={[]} />
-          <Select value={areaFilter} onChange={(e) => setAreaFilter(e.target.value)} placeholder="All Areas" options={[]} />
+          <Select value={providerFilter} onChange={(e) => setProviderFilter(e.target.value)} placeholder="All Providers" options={Object.values(PROVIDERS).map((p) => ({ value: p, label: p }))} />
+          <Select value={areaFilter} onChange={(e) => setAreaFilter(e.target.value)} placeholder="All Areas" options={(analytics?.areas || []).map((a) => ({ value: a.id || a.name || a, label: a.name || a }))} />
           <Button variant="primary" size="sm" onClick={handleApplyFilters}>Apply</Button>
         </div>
       </div>

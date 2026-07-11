@@ -151,57 +151,11 @@ export default function Profile() {
             </div>
 
             <div className="profile-detail-item">
-              <FiClock size={16} className="profile-detail-icon" />
-              <div className="profile-detail-content">
-                <span className="profile-detail-label">Last Login</span>
-                <span className="profile-detail-value">{formatDateTime(user.lastLogin)}</span>
-              </div>
-            </div>
-
-            <div className="profile-detail-item">
               <FiCalendar size={16} className="profile-detail-icon" />
               <div className="profile-detail-content">
                 <span className="profile-detail-label">Member Since</span>
                 <span className="profile-detail-value">{formatDate(user.createdAt)}</span>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="profile-card">
-          <div className="profile-card-header">
-            <h3 className="profile-card-title">Account Information</h3>
-          </div>
-          <div className="profile-account-info">
-            <div className="profile-info-row">
-              <span className="profile-info-label">User ID</span>
-              <span className="profile-info-value">{user.id || '—'}</span>
-            </div>
-            <div className="profile-info-row">
-              <span className="profile-info-label">Username</span>
-              <span className="profile-info-value">{user.username || user.name || '—'}</span>
-            </div>
-            <div className="profile-info-row">
-              <span className="profile-info-label">Email Verified</span>
-              <span className="profile-info-value">
-                {user.emailVerified ? (
-                  <span className="profile-verified">Verified</span>
-                ) : (
-                  <span className="profile-not-verified">Not Verified</span>
-                )}
-              </span>
-            </div>
-            <div className="profile-info-row">
-              <span className="profile-info-label">Account Status</span>
-              <span className="profile-info-value">
-                <span className={`profile-status-badge profile-status-badge--${(user.status || 'active').toLowerCase()}`}>
-                  {user.status || 'Active'}
-                </span>
-              </span>
-            </div>
-            <div className="profile-info-row">
-              <span className="profile-info-label">Member Since</span>
-              <span className="profile-info-value">{formatDate(user.createdAt)}</span>
             </div>
           </div>
         </div>

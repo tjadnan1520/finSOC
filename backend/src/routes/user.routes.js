@@ -10,6 +10,6 @@ router.use(auth);
 router.get('/profile', userController.getProfile);
 router.patch('/profile', userController.updateProfile);
 router.patch('/change-password', userController.changePassword);
-router.get('/by-role/:role', authorize('MANAGEMENT'), userController.getUsersByRole);
+router.get('/by-role/:role', authorize('MANAGEMENT', 'OPERATOR', 'AGENT'), userController.getUsersByRole);
 
 module.exports = router;

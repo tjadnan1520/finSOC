@@ -53,24 +53,30 @@ export default function CaseTable({ cases = [], loading, pagination, onPageChang
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-          <option value="">All Statuses</option>
-          {Object.values(CASE_STATUSES).map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </Select>
-        <Select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
-          <option value="">All Priorities</option>
-          {Object.values(CASE_PRIORITIES).map((p) => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </Select>
-        <Select value={providerFilter} onChange={(e) => setProviderFilter(e.target.value)}>
-          <option value="">All Providers</option>
-          {Object.values(PROVIDERS).map((p) => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </Select>
+        <Select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          options={[
+            { value: '', label: 'All Statuses' },
+            ...Object.values(CASE_STATUSES).map((s) => ({ value: s, label: s })),
+          ]}
+        />
+        <Select
+          value={priorityFilter}
+          onChange={(e) => setPriorityFilter(e.target.value)}
+          options={[
+            { value: '', label: 'All Priorities' },
+            ...Object.values(CASE_PRIORITIES).map((p) => ({ value: p, label: p })),
+          ]}
+        />
+        <Select
+          value={providerFilter}
+          onChange={(e) => setProviderFilter(e.target.value)}
+          options={[
+            { value: '', label: 'All Providers' },
+            ...Object.values(PROVIDERS).map((p) => ({ value: p, label: p })),
+          ]}
+        />
       </div>
 
       {!filtered.length ? (
@@ -97,10 +103,10 @@ export default function CaseTable({ cases = [], loading, pagination, onPageChang
                 </tr>
               </thead>
               <tbody>
-                {pageData.map((c) => (
+                {pageData.map((c, idx) => (
                   <tr key={c.id} className="case-table-row">
-                    <td className="case-table-id">{c.id}</td>
-                    <td className="case-table-alert-id">{c.alertId || '—'}</td>
+                    <td className="case-table-id">{pageStart + idx + 1}</td>
+                    <td className="case-table-alert-id">{c.alertId?.length > 8 ? `#${c.alertId.slice(0, 8).toUpperCase()}` : c.alertId || '—'}</td>
                     <td>{c.provider?.name || c.alert?.transaction?.provider?.name || '—'}</td>
                     <td>
                       <span

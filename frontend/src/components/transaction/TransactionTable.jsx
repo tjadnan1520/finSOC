@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
-import { FiSearch, FiChevronLeft, FiChevronRight, FiRefreshCw, FiCalendar } from 'react-icons/fi';
-import { formatCurrency, formatDate, getStatusColor } from '../../utils/formatter';
+import { FiSearch, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { formatCurrency, formatDateTime } from '../../utils/formatter';
 import Loader from '../common/Loader';
-import Button from '../common/Button';
 import './TransactionTable.css';
 
 function getPageNumbers(current, total) {
@@ -34,17 +33,8 @@ export default function TransactionTable({
   pagination = { page: 1, limit: 20, total: 0, totalPages: 1 },
   onPageChange,
   onSearch,
-  onFilter,
-  onView,
 }) {
   const [searchText, setSearchText] = useState('');
-  const [filters, setFilters] = useState({
-    type: '',
-    status: '',
-    provider: '',
-    dateFrom: '',
-    dateTo: '',
-  });
 
   const { page, totalPages } = pagination;
 
@@ -53,19 +43,6 @@ export default function TransactionTable({
     setSearchText(value);
     onSearch?.(value);
   }, [onSearch]);
-
-  const handleFilterChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-    onFilter?.({ ...filters, [name]: value });
-  }, [filters, onFilter]);
-
-  const handleRefresh = useCallback(() => {
-    setSearchText('');
-    setFilters({ type: '', status: '', provider: '', dateFrom: '', dateTo: '' });
-    onSearch?.('');
-    onFilter?.({ type: '', status: '', provider: '', dateFrom: '', dateTo: '' });
-  }, [onSearch, onFilter]);
 
   return (
     <div className="transaction-table">
@@ -80,52 +57,6 @@ export default function TransactionTable({
             onChange={handleSearch}
           />
         </div>
-
-        <div className="transaction-table__filters">
-          <select name="type" className="transaction-table__filter" value={filters.type} onChange={handleFilterChange}>
-            <option value="">All Types</option>
-            <option value="CASH_IN">Cash In</option>
-            <option value="CASH_OUT">Cash Out</option>
-          </select>
-
-          <select name="status" className="transaction-table__filter" value={filters.status} onChange={handleFilterChange}>
-            <option value="">All Statuses</option>
-            <option value="PENDING">Pending</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="FAILED">Failed</option>
-            <option value="CANCELLED">Cancelled</option>
-          </select>
-
-          <select name="provider" className="transaction-table__filter" value={filters.provider} onChange={handleFilterChange}>
-            <option value="">All Providers</option>
-            <option value="bKash">bKash</option>
-            <option value="Nagad">Nagad</option>
-            <option value="Rocket">Rocket</option>
-          </select>
-
-          <div className="transaction-table__date-filter">
-            <FiCalendar size={14} />
-            <input
-              type="date"
-              name="dateFrom"
-              className="transaction-table__date-input"
-              value={filters.dateFrom}
-              onChange={handleFilterChange}
-            />
-            <span className="transaction-table__date-sep">—</span>
-            <input
-              type="date"
-              name="dateTo"
-              className="transaction-table__date-input"
-              value={filters.dateTo}
-              onChange={handleFilterChange}
-            />
-          </div>
-
-          <Button variant="ghost" size="sm" onClick={handleRefresh} title="Reset filters">
-            <FiRefreshCw size={14} />
-          </Button>
-        </div>
       </div>
 
       <div className="transaction-table__table-wrapper">
@@ -139,45 +70,25 @@ export default function TransactionTable({
           <table className="transaction-table__table">
             <thead>
               <tr>
-                <th>Reference</th>
-                <th>Date</th>
+                <th>Phone</th>
                 <th>Provider</th>
-                <th>Agent</th>
                 <th>Type</th>
                 <th>Amount</th>
-                <th>Status</th>
-                <th></th>
+                <th>Time</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((tx) => (
                 <tr key={tx.id}>
-                  <td className="transaction-table__ref">{tx.referenceNumber || '—'}</td>
-                  <td>{formatDate(tx.createdAt)}</td>
+                  <td className="transaction-table__ref">{tx.phoneNumber || tx.referenceNumber || '—'}</td>
                   <td>{tx.provider?.name || '—'}</td>
-                  <td>{tx.agent?.name || '—'}</td>
                   <td>
                     <span className={`transaction-table__type transaction-table__type--${(tx.type || '').toLowerCase()}`}>
                       {tx.type}
                     </span>
                   </td>
                   <td className="transaction-table__amount">{formatCurrency(tx.amount)}</td>
-                  <td>
-                    <span
-                      className="transaction-table__status"
-                      style={{ '--status-color': getStatusColor(tx.status) }}
-                    >
-                      {tx.status}
-                    </span>
-                  </td>
-                  <td>
-                    <button
-                      className="transaction-table__view-btn"
-                      onClick={() => onView?.(tx.id)}
-                    >
-                      View
-                    </button>
-                  </td>
+                  <td className="transaction-table__time">{formatDateTime(tx.createdAt)}</td>
                 </tr>
               ))}
             </tbody>

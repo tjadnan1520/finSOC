@@ -53,24 +53,30 @@ export default function AlertTable({ alerts = [], loading, pagination, onPageCha
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
-          <option value="">All Severities</option>
-          {Object.values(ALERT_SEVERITIES).map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </Select>
-        <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-          <option value="">All Statuses</option>
-          {Object.values(ALERT_STATUSES).map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </Select>
-        <Select value={providerFilter} onChange={(e) => setProviderFilter(e.target.value)}>
-          <option value="">All Providers</option>
-          {Object.values(PROVIDERS).map((p) => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </Select>
+        <Select
+          value={severityFilter}
+          onChange={(e) => setSeverityFilter(e.target.value)}
+          options={[
+            { value: '', label: 'All Severities' },
+            ...Object.values(ALERT_SEVERITIES).map((s) => ({ value: s, label: s })),
+          ]}
+        />
+        <Select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          options={[
+            { value: '', label: 'All Statuses' },
+            ...Object.values(ALERT_STATUSES).map((s) => ({ value: s, label: s })),
+          ]}
+        />
+        <Select
+          value={providerFilter}
+          onChange={(e) => setProviderFilter(e.target.value)}
+          options={[
+            { value: '', label: 'All Providers' },
+            ...Object.values(PROVIDERS).map((p) => ({ value: p, label: p })),
+          ]}
+        />
       </div>
 
       {!filtered.length ? (
@@ -89,7 +95,6 @@ export default function AlertTable({ alerts = [], loading, pagination, onPageCha
                   <th>Severity</th>
                   <th>Category</th>
                   <th>Provider</th>
-                  <th>Agent</th>
                   <th>Confidence</th>
                   <th>Status</th>
                   <th>Time</th>
@@ -97,9 +102,9 @@ export default function AlertTable({ alerts = [], loading, pagination, onPageCha
                 </tr>
               </thead>
               <tbody>
-                {pageData.map((alert) => (
+                {pageData.map((alert, idx) => (
                   <tr key={alert.id} className="alert-table-row">
-                    <td className="alert-table-id">{alert.id}</td>
+                    <td className="alert-table-id">{pageStart + idx + 1}</td>
                     <td>
                       <span
                         className="alert-severity-badge"
@@ -110,7 +115,6 @@ export default function AlertTable({ alerts = [], loading, pagination, onPageCha
                     </td>
                     <td>{alert.category}</td>
                     <td>{alert.provider?.name || alert.transaction?.provider?.name || '—'}</td>
-                    <td>{alert.agent?.name || alert.transaction?.agent?.name || '—'}</td>
                     <td>
                       <div className="alert-confidence">
                         <div className="alert-confidence-bar">

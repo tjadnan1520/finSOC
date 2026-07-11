@@ -11,7 +11,6 @@ import LiquidityOverview from '../components/dashboard/LiquidityOverview';
 import ProviderBalance from '../components/dashboard/ProviderBalance';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import RecentAlerts from '../components/dashboard/RecentAlerts';
-import AIRecommendation from '../components/dashboard/AIRecommendation';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -63,10 +62,6 @@ export default function Dashboard() {
         </div>
 
         <div className="dashboard__widget dashboard__widget--half">
-          <AIRecommendation recommendation={dashboard?.aiRecommendation} />
-        </div>
-
-        <div className="dashboard__widget dashboard__widget--half">
           <LiquidityOverview data={dashboard?.liquidityOverview} />
         </div>
       </div>
@@ -98,10 +93,6 @@ export default function Dashboard() {
         </div>
 
         <div className="dashboard__widget dashboard__widget--half">
-          <AIRecommendation recommendation={dashboard?.aiRecommendation} />
-        </div>
-
-        <div className="dashboard__widget dashboard__widget--half">
           <div className="dashboard__widget-card">
             <h3 className="dashboard__widget-title">Recommendation Summary</h3>
             <p className="dashboard__widget-content">{dashboard?.recommendationSummary || 'No recommendations available'}</p>
@@ -119,7 +110,7 @@ export default function Dashboard() {
               <div className="dashboard__escalation-list">
                 {dashboard.escalationQueue.map((item, i) => (
                   <div key={i} className="dashboard__escalation-item">
-                    <span>{item.alertId || item.id}</span>
+                    <span>{(item.alertId || item.id)?.length > 8 ? `#${(item.alertId || item.id).slice(0, 8).toUpperCase()}` : (item.alertId || item.id)}</span>
                     <span className="dashboard__escalation-reason">{item.reason}</span>
                   </div>
                 ))}

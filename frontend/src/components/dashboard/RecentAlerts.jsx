@@ -33,9 +33,9 @@ export default function RecentAlerts({ alerts = [] }) {
             </tr>
           </thead>
           <tbody>
-            {alerts.map((alert) => (
+            {alerts.map((alert, idx) => (
               <tr key={alert.id}>
-                <td className="recent-alerts__id">{alert.id}</td>
+                <td className="recent-alerts__id">{idx + 1}</td>
                 <td className="recent-alerts__title-text">{alert.title}</td>
                 <td>
                   <span

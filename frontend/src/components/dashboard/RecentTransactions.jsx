@@ -1,4 +1,4 @@
-import { formatCurrency, formatRelativeTime, getStatusColor } from '../../utils/formatter';
+import { formatCurrency, formatDateTime } from '../../utils/formatter';
 import './RecentTransactions.css';
 
 export default function RecentTransactions({ transactions = [] }) {
@@ -24,40 +24,25 @@ export default function RecentTransactions({ transactions = [] }) {
         <table className="recent-transactions__table">
           <thead>
             <tr>
-              <th>Reference</th>
+              <th>Phone</th>
               <th>Provider</th>
-              <th>Agent</th>
               <th>Amount</th>
               <th>Type</th>
-              <th>Status</th>
               <th>Time</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
             {transactions.map((tx) => (
               <tr key={tx.id}>
-                <td className="recent-transactions__ref">{tx.referenceNumber || '—'}</td>
+                <td className="recent-transactions__ref">{tx.phoneNumber || tx.referenceNumber || '—'}</td>
                 <td>{tx.provider?.name || '—'}</td>
-                <td>{tx.agent?.name || '—'}</td>
                 <td className="recent-transactions__amount">{formatCurrency(tx.amount)}</td>
                 <td>
                   <span className={`recent-transactions__type recent-transactions__type--${(tx.type || '').toLowerCase()}`}>
                     {tx.type}
                   </span>
                 </td>
-                <td>
-                  <span
-                    className="recent-transactions__status"
-                    style={{ '--status-color': getStatusColor(tx.status) }}
-                  >
-                    {tx.status}
-                  </span>
-                </td>
-                <td className="recent-transactions__time">{formatRelativeTime(tx.createdAt)}</td>
-                <td>
-                  <a href={`/transactions/${tx.id}`} className="recent-transactions__view">View</a>
-                </td>
+                <td className="recent-transactions__time">{formatDateTime(tx.createdAt)}</td>
               </tr>
             ))}
           </tbody>

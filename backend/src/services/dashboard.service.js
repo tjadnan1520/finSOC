@@ -72,7 +72,7 @@ const getDashboard = async (user) => {
     } catch (error) {
       aiRecommendation = {
         summary: 'AI recommendation temporarily unavailable',
-        reason: error.message,
+        reason: 'AI service is currently unavailable. Please try again later.',
         recommendation: 'Review dashboard data manually',
         confidence: 0,
         uncertainty: 100,

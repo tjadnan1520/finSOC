@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FiRefreshCw, FiSearch, FiDollarSign, FiActivity, FiCheckCircle, FiAlertTriangle, FiXCircle } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import useProviders from '../hooks/useProviders';
-import ProviderChart from '../components/analytics/ProviderChart';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Loader from '../components/common/Loader';
@@ -31,35 +30,19 @@ export default function Providers() {
   const { providers, balances, loading, error, refresh } = useProviders();
   const [search, setSearch] = useState('');
 
-  const filteredProviders = useMemo(() => {
-    if (!search.trim()) return providers;
+  const filteredProviders = providers.filter((p) => {
+    if (!search.trim()) return true;
     const q = search.toLowerCase();
-    return providers.filter((p) =>
+    return (
       p.name?.toLowerCase().includes(q) ||
       p.code?.toLowerCase().includes(q) ||
       p.id?.toLowerCase().includes(q)
     );
-  }, [providers, search]);
-
-  useEffect(() => {
-    if (providers.length > 0) return;
-  }, [providers]);
+  });
 
   const handleRefresh = useCallback(() => {
     refresh();
   }, [refresh]);
-
-  const chartData = useMemo(() => {
-    return providers.map((p) => {
-      const bal = balances.find((b) => b.providerId === p.id || b.provider === p.name);
-      return {
-        name: p.name,
-        currentBalance: bal?.balance ?? p.balance ?? 0,
-        transactions: p.todayTransactions ?? p.transactions ?? 0,
-        health: p.health || 'Unknown',
-      };
-    });
-  }, [providers, balances]);
 
   if (loading && !providers.length) {
     return (
@@ -171,51 +154,6 @@ export default function Providers() {
         })}
       </div>
 
-      <div className="providers-comparison-section">
-        <h2 className="providers-section-title">Provider Comparison</h2>
-        <div className="providers-chart-wrapper">
-          <ProviderChart data={chartData} />
-        </div>
-      </div>
-
-      <div className="providers-balance-section">
-        <h2 className="providers-section-title">Provider Balances</h2>
-        <div className="providers-balance-table-wrapper">
-          <table className="providers-balance-table">
-            <thead>
-              <tr>
-                <th>Provider</th>
-                <th>Current Balance</th>
-                <th>Available Balance</th>
-                <th>Reserved</th>
-                <th>Daily Volume</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {balances.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="providers-table-empty">No balance data available</td>
-                </tr>
-              )}
-              {balances.map((b, idx) => (
-                <tr key={b.id || idx}>
-                  <td className="providers-balance-name">{b.provider || b.providerId}</td>
-                  <td>${(b.balance ?? 0).toLocaleString()}</td>
-                  <td>${(b.available ?? b.availableBalance ?? 0).toLocaleString()}</td>
-                  <td>${(b.reserved ?? 0).toLocaleString()}</td>
-                  <td>${(b.dailyVolume ?? 0).toLocaleString()}</td>
-                  <td>
-                    <span className={`providers-balance-status providers-balance-status--${(b.status || 'active').toLowerCase()}`}>
-                      {b.status || 'Active'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   );
 }

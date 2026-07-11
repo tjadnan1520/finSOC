@@ -59,8 +59,7 @@ export default function useAlerts() {
 
   const refresh = useCallback(async () => {
     await loadAlerts({ page: pagination.page, limit: pagination.limit });
-    await loadSummary();
-  }, [loadAlerts, loadSummary, pagination.page, pagination.limit]);
+  }, [loadAlerts, pagination.page, pagination.limit]);
 
   return {
     alerts,

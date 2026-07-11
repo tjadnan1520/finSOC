@@ -6,16 +6,14 @@ import './TransactionForm.css';
 
 const initialForm = {
   providerId: '',
-  agentId: '',
   amount: '',
-  referenceNumber: '',
+  phoneNumber: '',
   remarks: '',
 };
 
 export default function TransactionForm({
   type = 'CASH_IN',
   providers = [],
-  agents = [],
   onSubmit,
   loading = false,
 }) {
@@ -33,7 +31,6 @@ export default function TransactionForm({
   function validate() {
     const errs = {};
     if (!form.providerId) errs.providerId = 'Provider is required';
-    if (!form.agentId) errs.agentId = 'Agent is required';
     if (!form.amount || Number(form.amount) <= 0) errs.amount = 'Amount must be greater than 0';
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -45,9 +42,8 @@ export default function TransactionForm({
     onSubmit({
       type,
       providerId: form.providerId,
-      agentId: form.agentId,
       amount: Number(form.amount),
-      referenceNumber: form.referenceNumber || undefined,
+      phoneNumber: form.phoneNumber || undefined,
       remarks: form.remarks || undefined,
     });
   }
@@ -75,16 +71,6 @@ export default function TransactionForm({
             error={errors.providerId}
           />
 
-          <Select
-            label="Agent"
-            options={agents}
-            placeholder="Select agent"
-            name="agentId"
-            value={form.agentId}
-            onChange={handleChange}
-            error={errors.agentId}
-          />
-
           <Input
             label="Amount"
             type="number"
@@ -98,11 +84,11 @@ export default function TransactionForm({
           />
 
           <Input
-            label="Reference Number"
+            label="Phone Number"
             type="text"
-            name="referenceNumber"
-            placeholder="Optional reference"
-            value={form.referenceNumber}
+            name="phoneNumber"
+            placeholder="Customer phone number"
+            value={form.phoneNumber}
             onChange={handleChange}
           />
 

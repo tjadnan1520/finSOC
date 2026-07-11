@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FiRefreshCw, FiDollarSign, FiTrendingUp, FiTrendingDown, FiBriefcase } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import useTransactions from '../hooks/useTransactions';
+import useProviders from '../hooks/useProviders';
 import { ROLES } from '../utils/constants';
 import { getCurrentDate, getCurrentTime } from '../utils/dateTime';
 import { formatCurrency } from '../utils/formatter';
@@ -14,12 +14,13 @@ import TransactionTable from '../components/transaction/TransactionTable';
 import './Transactions.css';
 
 export default function Transactions() {
-  const navigate = useNavigate();
   const { role } = useAuth();
   const {
     transactions, loading, error, pagination, todaySummary,
     loadTransactions, loadTodaySummary, cashIn, cashOut, refresh,
   } = useTransactions();
+
+  const { providers } = useProviders();
 
   const [activeForm, setActiveForm] = useState('cashIn');
   const [formLoading, setFormLoading] = useState(false);
@@ -28,6 +29,11 @@ export default function Transactions() {
     loadTransactions();
     loadTodaySummary();
   }, [loadTransactions, loadTodaySummary]);
+
+  const providerOptions = providers.map((p) => ({
+    value: p.id,
+    label: p.name,
+  }));
 
   const handleRefresh = () => {
     refresh();
@@ -40,14 +46,6 @@ export default function Transactions() {
 
   const handleSearch = (searchText) => {
     loadTransactions({ search: searchText, page: 1, limit: pagination?.limit || 20 });
-  };
-
-  const handleFilter = (filters) => {
-    loadTransactions({ ...filters, page: 1, limit: pagination?.limit || 20 });
-  };
-
-  const handleView = (txId) => {
-    navigate(`/transactions/${txId}`);
   };
 
   const handleCashIn = async (payload) => {
@@ -157,9 +155,9 @@ export default function Transactions() {
           </div>
           <div className="transactions__form-card">
             {activeForm === 'cashIn' ? (
-              <CashInForm onSubmit={handleCashIn} loading={formLoading} />
+              <CashInForm onSubmit={handleCashIn} loading={formLoading} providers={providerOptions} />
             ) : (
-              <CashOutForm onSubmit={handleCashOut} loading={formLoading} />
+              <CashOutForm onSubmit={handleCashOut} loading={formLoading} providers={providerOptions} />
             )}
           </div>
         </div>
@@ -175,8 +173,6 @@ export default function Transactions() {
           pagination={pagination}
           onPageChange={handlePageChange}
           onSearch={handleSearch}
-          onFilter={handleFilter}
-          onView={handleView}
         />
       </div>
     </div>

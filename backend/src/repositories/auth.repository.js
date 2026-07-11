@@ -16,6 +16,7 @@ const AuthRepository = {
       where: { id },
       include: {
         role: true,
+        area: true,
       },
     });
   },
