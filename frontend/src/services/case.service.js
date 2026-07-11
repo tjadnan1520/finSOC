@@ -15,3 +15,5 @@ export const closeCase = (id) => api.patch(`/cases/${id}/close`);
 export const addCaseNote = (id, content) => api.post(`/cases/${id}/notes`, { content });
 
 export const getCaseSummary = () => api.get('/cases/summary');
+
+export default { getCases, getCaseById, assignCase, acceptCase, resolveCase, closeCase, addCaseNote, getCaseSummary };

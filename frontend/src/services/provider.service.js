@@ -9,3 +9,5 @@ export const getProviderBalances = () => api.get('/providers/balances');
 export const getProviderStatistics = (id) => api.get(`/providers/statistics/${id}`);
 
 export const getProviderPerformance = () => api.get('/providers/performance');
+
+export default { getProviders, getProviderById, getProviderBalances, getProviderStatistics, getProviderPerformance };

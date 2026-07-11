@@ -9,3 +9,5 @@ export const markAsRead = (id) => api.patch(`/notifications/${id}/read`);
 export const markAllAsRead = () => api.patch('/notifications/read-all');
 
 export const deleteNotification = (id) => api.delete(`/notifications/${id}`);
+
+export default { getNotifications, getUnreadCount, markAsRead, markAllAsRead, deleteNotification };

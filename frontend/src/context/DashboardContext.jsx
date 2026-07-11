@@ -30,11 +30,7 @@ export function DashboardProvider({ children }) {
     refreshDashboard();
   }, [isAuthenticated, refreshDashboard]);
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    const interval = setInterval(refreshDashboard, 60000);
-    return () => clearInterval(interval);
-  }, [isAuthenticated, refreshDashboard]);
+
 
   const value = {
     dashboard,

@@ -23,7 +23,7 @@ export default function AlertTable({ alerts = [], loading, pagination, onPageCha
         a.category?.toLowerCase().includes(search.toLowerCase());
       const matchSeverity = !severityFilter || a.severity === severityFilter;
       const matchStatus = !statusFilter || a.status === statusFilter;
-      const matchProvider = !providerFilter || a.provider === providerFilter;
+      const matchProvider = !providerFilter || a.provider?.name === providerFilter || a.transaction?.provider?.name === providerFilter;
       return matchSearch && matchSeverity && matchStatus && matchProvider;
     });
   }, [alerts, search, severityFilter, statusFilter, providerFilter]);
@@ -109,8 +109,8 @@ export default function AlertTable({ alerts = [], loading, pagination, onPageCha
                       </span>
                     </td>
                     <td>{alert.category}</td>
-                    <td>{alert.provider}</td>
-                    <td>{alert.agent || '—'}</td>
+                    <td>{alert.provider?.name || alert.transaction?.provider?.name || '—'}</td>
+                    <td>{alert.agent?.name || alert.transaction?.agent?.name || '—'}</td>
                     <td>
                       <div className="alert-confidence">
                         <div className="alert-confidence-bar">

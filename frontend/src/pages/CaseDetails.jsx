@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import useCases from '../hooks/useCases';
 import CaseDetailsComponent from '../components/cases/CaseDetails';
 import Loader from '../components/common/Loader';

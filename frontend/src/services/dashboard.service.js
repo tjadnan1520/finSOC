@@ -7,3 +7,5 @@ export const getDashboardSummary = () => api.get('/dashboard/summary');
 export const getDashboardKPIs = () => api.get('/dashboard/kpis');
 
 export const getLiquidity = () => api.get('/dashboard/liquidity');
+
+export default { getDashboard, getDashboardSummary, getDashboardKPIs, getLiquidity };

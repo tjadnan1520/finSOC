@@ -91,7 +91,7 @@ const DashboardRepository = {
     const [activeAlerts, assignedCases, recentAlerts, openCasesCount, notificationsCount] =
       await Promise.all([
         prisma.alert.findMany({
-          where: { status: { in: ['OPEN', 'IN_PROGRESS'] } },
+          where: { status: { in: ['OPEN', 'INVESTIGATING'] } },
           orderBy: { generatedAt: 'desc' },
           include: {
             transaction: true,

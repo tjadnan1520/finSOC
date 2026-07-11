@@ -38,8 +38,8 @@ export default function RecentTransactions({ transactions = [] }) {
             {transactions.map((tx) => (
               <tr key={tx.id}>
                 <td className="recent-transactions__ref">{tx.referenceNumber || '—'}</td>
-                <td>{tx.provider}</td>
-                <td>{tx.agent}</td>
+                <td>{tx.provider?.name || '—'}</td>
+                <td>{tx.agent?.name || '—'}</td>
                 <td className="recent-transactions__amount">{formatCurrency(tx.amount)}</td>
                 <td>
                   <span className={`recent-transactions__type recent-transactions__type--${(tx.type || '').toLowerCase()}`}>

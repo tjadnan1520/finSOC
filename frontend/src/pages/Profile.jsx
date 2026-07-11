@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { FiMail, FiPhone, FiMapPin, FiCalendar, FiClock, FiShield, FiEdit2, FiSave, FiEye, FiEyeOff } from 'react-icons/fi';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Loader from '../components/common/Loader';
@@ -138,7 +138,7 @@ export default function Profile() {
               <FiMapPin size={16} className="profile-detail-icon" />
               <div className="profile-detail-content">
                 <span className="profile-detail-label">Area</span>
-                <span className="profile-detail-value">{user.area || user.region || '—'}</span>
+                <span className="profile-detail-value">{user.area?.name || user.area || user.region || '—'}</span>
               </div>
             </div>
 

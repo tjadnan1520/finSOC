@@ -23,7 +23,7 @@ export default function CaseTable({ cases = [], loading, pagination, onPageChang
         c.alertId?.toLowerCase().includes(search.toLowerCase());
       const matchStatus = !statusFilter || c.status === statusFilter;
       const matchPriority = !priorityFilter || c.priority === priorityFilter;
-      const matchProvider = !providerFilter || c.provider === providerFilter;
+      const matchProvider = !providerFilter || c.provider?.name === providerFilter || c.alert?.transaction?.provider?.name === providerFilter;
       return matchSearch && matchStatus && matchPriority && matchProvider;
     });
   }, [cases, search, statusFilter, priorityFilter, providerFilter]);
@@ -101,7 +101,7 @@ export default function CaseTable({ cases = [], loading, pagination, onPageChang
                   <tr key={c.id} className="case-table-row">
                     <td className="case-table-id">{c.id}</td>
                     <td className="case-table-alert-id">{c.alertId || '—'}</td>
-                    <td>{c.provider}</td>
+                    <td>{c.provider?.name || c.alert?.transaction?.provider?.name || '—'}</td>
                     <td>
                       <span
                         className="case-priority-badge"
@@ -110,7 +110,7 @@ export default function CaseTable({ cases = [], loading, pagination, onPageChang
                         {c.priority}
                       </span>
                     </td>
-                    <td>{c.assignedTo || 'Unassigned'}</td>
+                    <td>{c.assignedTo?.name || 'Unassigned'}</td>
                     <td>
                       <span
                         className="case-status-badge"

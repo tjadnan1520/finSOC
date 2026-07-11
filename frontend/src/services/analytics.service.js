@@ -13,3 +13,5 @@ export const getProviderAnalytics = () => api.get('/analytics/providers');
 export const getLiquidityTrend = (params) => api.get('/analytics/liquidity', { params });
 
 export const getPerformanceMetrics = () => api.get('/analytics/performance');
+
+export default { getOverview, getKPIs, getForecast, getRisk, getProviderAnalytics, getLiquidityTrend, getPerformanceMetrics };

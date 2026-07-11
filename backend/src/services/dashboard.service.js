@@ -81,6 +81,7 @@ const getDashboard = async (user) => {
 
     return {
       ...dashboardData,
+      providerHealth: Math.round(avgHealth),
       liquidity: {
         ...liquidityResult,
         thresholds: liquidityThreshold,

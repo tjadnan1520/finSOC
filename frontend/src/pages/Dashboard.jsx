@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { FiRefreshCw, FiDollarSign, FiUsers, FiAlertTriangle, FiCheckCircle, FiBriefcase, FiBarChart2, FiTrendingUp } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import useDashboard from '../hooks/useDashboard';
@@ -18,10 +17,6 @@ import './Dashboard.css';
 export default function Dashboard() {
   const { role } = useAuth();
   const { dashboard, loading, error, lastUpdated, refresh } = useDashboard();
-
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
 
   const handleRefresh = () => refresh();
 
@@ -49,7 +44,7 @@ export default function Dashboard() {
   const renderAgentDashboard = () => (
     <>
       <SummaryCards cards={[
-        { icon: <FiDollarSign size={20} />, title: 'Physical Cash', value: formatCurrency(dashboard?.physicalCash), color: 'var(--color-success)' },
+        { icon: <FiDollarSign size={20} />, title: 'Physical Cash', value: formatCurrency(dashboard?.physicalCash?.currentBalance), color: 'var(--color-success)' },
         ...(dashboard?.todayCashIn !== undefined ? [{ icon: <FiTrendingUp size={20} />, title: "Today's Cash In", value: formatCurrency(dashboard.todayCashIn), color: 'var(--color-primary)' }] : []),
         ...(dashboard?.todayCashOut !== undefined ? [{ icon: <FiTrendingUp size={20} />, title: "Today's Cash Out", value: formatCurrency(dashboard.todayCashOut), color: 'var(--color-warning)' }] : []),
       ]} />
@@ -81,10 +76,10 @@ export default function Dashboard() {
   const renderOperatorDashboard = () => (
     <>
       <SummaryCards cards={[
-        { icon: <FiAlertTriangle size={20} />, title: 'Active Alerts', value: dashboard?.activeAlerts ?? '—', color: 'var(--color-warning)' },
-        { icon: <FiAlertTriangle size={20} />, title: 'Critical Alerts', value: dashboard?.criticalAlerts ?? '—', color: 'var(--color-danger)' },
-        { icon: <FiBriefcase size={20} />, title: 'Assigned Cases', value: dashboard?.assignedCases ?? '—', color: 'var(--color-primary)' },
-        { icon: <FiCheckCircle size={20} />, title: 'Pending Reviews', value: dashboard?.pendingReviews ?? '—', color: 'var(--color-info)' },
+        { icon: <FiAlertTriangle size={20} />, title: 'Active Alerts', value: dashboard?.activeAlerts?.length ?? '—', color: 'var(--color-warning)' },
+        { icon: <FiAlertTriangle size={20} />, title: 'Critical Alerts', value: dashboard?.activeAlerts?.filter(a => a.severity === 'CRITICAL').length ?? '—', color: 'var(--color-danger)' },
+        { icon: <FiBriefcase size={20} />, title: 'Assigned Cases', value: dashboard?.assignedCases?.length ?? '—', color: 'var(--color-primary)' },
+        { icon: <FiCheckCircle size={20} />, title: 'Open Cases', value: dashboard?.openCasesCount ?? '—', color: 'var(--color-info)' },
       ]} />
 
       <div className="dashboard__grid dashboard__grid--operator">
@@ -141,10 +136,10 @@ export default function Dashboard() {
   const renderManagementDashboard = () => (
     <>
       <SummaryCards cards={[
-        { icon: <FiDollarSign size={20} />, title: 'Overall Liquidity', value: formatCurrency(dashboard?.overallLiquidity), color: 'var(--color-primary)' },
+        { icon: <FiDollarSign size={20} />, title: 'Overall Liquidity', value: formatCurrency(dashboard?.liquidity?.totalLiquidity), color: 'var(--color-primary)' },
         { icon: <FiBarChart2 size={20} />, title: 'Provider Health', value: dashboard?.providerHealth ?? '—', color: 'var(--color-success)' },
-        { icon: <FiAlertTriangle size={20} />, title: 'Active Alerts', value: dashboard?.activeAlerts ?? '—', color: 'var(--color-warning)' },
-        { icon: <FiBriefcase size={20} />, title: 'Open Cases', value: dashboard?.openCases ?? '—', color: 'var(--color-info)' },
+        { icon: <FiAlertTriangle size={20} />, title: 'Active Alerts', value: dashboard?.recentAlerts?.length ?? '—', color: 'var(--color-warning)' },
+        { icon: <FiBriefcase size={20} />, title: 'Open Cases', value: dashboard?.openCasesCount ?? '—', color: 'var(--color-info)' },
       ]} />
 
       <div className="dashboard__grid dashboard__grid--management">

@@ -1,14 +1,17 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useAuth } from './AuthContext';
 import notificationService from '../services/notification.service';
 
 const NotificationContext = createContext(null);
 
 export function NotificationProvider({ children }) {
+  const { isAuthenticated } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const refreshNotifications = useCallback(async () => {
+    if (!isAuthenticated) return;
     setLoading(true);
     try {
       const { data } = await notificationService.getNotifications();
@@ -19,7 +22,7 @@ export function NotificationProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const markAsRead = useCallback(async (id) => {
     try {
@@ -47,10 +50,7 @@ export function NotificationProvider({ children }) {
     refreshNotifications();
   }, [refreshNotifications]);
 
-  useEffect(() => {
-    const interval = setInterval(refreshNotifications, 30000);
-    return () => clearInterval(interval);
-  }, [refreshNotifications]);
+
 
   const value = {
     notifications,

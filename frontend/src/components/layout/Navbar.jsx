@@ -6,8 +6,6 @@ import './Navbar.css';
 
 const PAGE_TITLES = {
   '/dashboard': 'Dashboard',
-  '/cash-in': 'Cash In',
-  '/cash-out': 'Cash Out',
   '/transactions': 'Transactions',
   '/alerts': 'Alerts',
   '/cases': 'Cases',
@@ -44,7 +42,7 @@ export default function Navbar({ onToggleSidebar }) {
 
   const displayName = user?.name || user?.email || 'User';
   const avatarLetter = displayName.charAt(0).toUpperCase();
-  const userRole = user?.role || '';
+  const userRole = typeof user?.role === 'object' ? user?.role?.name || '' : user?.role || '';
 
   return (
     <header className="navbar">

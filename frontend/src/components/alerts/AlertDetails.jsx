@@ -91,11 +91,11 @@ export default function AlertDetails({ alert, onAssign, onResolve, onClose, user
               </div>
               <div className="alert-details-info-item">
                 <span className="alert-details-label">Provider</span>
-                <span className="alert-details-value">{alert.provider}</span>
+                <span className="alert-details-value">{alert.provider?.name || alert.transaction?.provider?.name || '—'}</span>
               </div>
               <div className="alert-details-info-item">
                 <span className="alert-details-label">Agent</span>
-                <span className="alert-details-value">{alert.agent || '—'}</span>
+                <span className="alert-details-value">{alert.agent?.name || alert.transaction?.agent?.name || '—'}</span>
               </div>
               <div className="alert-details-info-item">
                 <span className="alert-details-label">Category</span>

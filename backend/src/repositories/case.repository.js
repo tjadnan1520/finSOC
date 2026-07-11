@@ -31,7 +31,17 @@ const CaseRepository = {
         take: limit,
         orderBy,
         include: {
-          alert: true,
+          alert: {
+            include: {
+              transaction: {
+                include: {
+                  provider: true,
+                  agent: true,
+                  area: true,
+                },
+              },
+            },
+          },
           assignedTo: {
             select: {
               id: true,
@@ -68,7 +78,13 @@ const CaseRepository = {
       include: {
         alert: {
           include: {
-            transaction: true,
+            transaction: {
+              include: {
+                provider: true,
+                agent: true,
+                area: true,
+              },
+            },
             aiAnalysis: true,
             evidence: true,
           },

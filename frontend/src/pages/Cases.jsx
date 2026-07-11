@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FiRefreshCw, FiAlertCircle, FiCheckCircle, FiClock, FiTrendingUp } from 'react-icons/fi';
 import { format } from 'date-fns';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import useCases from '../hooks/useCases';
 import CaseTable from '../components/cases/CaseTable';
 import SummaryCards from '../components/dashboard/SummaryCards';

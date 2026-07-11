@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FiRefreshCw, FiDownload, FiTrendingUp, FiDollarSign, FiAlertTriangle, FiFolder, FiClock, FiShield } from 'react-icons/fi';
 import { format } from 'date-fns';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import useAnalytics from '../hooks/useAnalytics';
 import LiquidityChart from '../components/analytics/LiquidityChart';
 import ProviderChart from '../components/analytics/ProviderChart';

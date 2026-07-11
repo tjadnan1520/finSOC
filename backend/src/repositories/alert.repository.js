@@ -24,7 +24,13 @@ const AlertRepository = {
         take: limit,
         orderBy: { generatedAt: 'desc' },
         include: {
-          transaction: true,
+          transaction: {
+            include: {
+              provider: true,
+              agent: true,
+              area: true,
+            },
+          },
           aiAnalysis: true,
           case: true,
         },
@@ -47,7 +53,13 @@ const AlertRepository = {
     return prisma.alert.findUnique({
       where: { id },
       include: {
-        transaction: true,
+        transaction: {
+          include: {
+            provider: true,
+            agent: true,
+            area: true,
+          },
+        },
         aiAnalysis: true,
         case: true,
         evidence: true,

@@ -73,7 +73,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     user,
-    role: user?.role || null,
+    role: user?.role?.name || user?.role || null,
     token,
     isAuthenticated,
     loading,

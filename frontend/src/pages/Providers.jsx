@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FiRefreshCw, FiSearch, FiDollarSign, FiActivity, FiCheckCircle, FiAlertTriangle, FiXCircle } from 'react-icons/fi';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import useProviders from '../hooks/useProviders';
 import ProviderChart from '../components/analytics/ProviderChart';
 import Input from '../components/common/Input';

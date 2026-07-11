@@ -22,9 +22,14 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data && typeof response.data === 'object' && 'success' in response.data && 'data' in response.data) {
+      response.data = response.data.data;
+    }
+    return response;
+  },
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401 && !window.location.pathname.startsWith('/login')) {
       clearSession();
       window.location.href = '/login';
     }

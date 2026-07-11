@@ -40,8 +40,6 @@ export function getSidebarMenu(role) {
     case ROLES.AGENT:
       baseItems.push(
         { label: 'Dashboard', path: '/dashboard', icon: 'DashboardIcon' },
-        { label: 'Cash In', path: '/transactions', icon: 'TransactionIcon' },
-        { label: 'Cash Out', path: '/transactions', icon: 'TransactionIcon' },
         { label: 'Transactions', path: '/transactions', icon: 'TransactionIcon' },
         { label: 'Alerts', path: '/alerts', icon: 'AlertIcon' },
         { label: 'Providers', path: '/providers', icon: 'ProviderIcon' },

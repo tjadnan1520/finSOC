@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Search, ChevronLeft, ChevronRight, RefreshCw, Calendar } from 'react-icons/fi';
+import { FiSearch, FiChevronLeft, FiChevronRight, FiRefreshCw, FiCalendar } from 'react-icons/fi';
 import { formatCurrency, formatDate, getStatusColor } from '../../utils/formatter';
 import Loader from '../common/Loader';
 import Button from '../common/Button';
@@ -71,7 +71,7 @@ export default function TransactionTable({
     <div className="transaction-table">
       <div className="transaction-table__toolbar">
         <div className="transaction-table__search">
-          <Search size={16} className="transaction-table__search-icon" />
+          <FiSearch size={16} className="transaction-table__search-icon" />
           <input
             type="text"
             className="transaction-table__search-input"
@@ -104,7 +104,7 @@ export default function TransactionTable({
           </select>
 
           <div className="transaction-table__date-filter">
-            <Calendar size={14} />
+            <FiCalendar size={14} />
             <input
               type="date"
               name="dateFrom"
@@ -123,7 +123,7 @@ export default function TransactionTable({
           </div>
 
           <Button variant="ghost" size="sm" onClick={handleRefresh} title="Reset filters">
-            <RefreshCw size={14} />
+            <FiRefreshCw size={14} />
           </Button>
         </div>
       </div>
@@ -154,8 +154,8 @@ export default function TransactionTable({
                 <tr key={tx.id}>
                   <td className="transaction-table__ref">{tx.referenceNumber || '—'}</td>
                   <td>{formatDate(tx.createdAt)}</td>
-                  <td>{tx.provider}</td>
-                  <td>{tx.agent}</td>
+                  <td>{tx.provider?.name || '—'}</td>
+                  <td>{tx.agent?.name || '—'}</td>
                   <td>
                     <span className={`transaction-table__type transaction-table__type--${(tx.type || '').toLowerCase()}`}>
                       {tx.type}
@@ -192,7 +192,7 @@ export default function TransactionTable({
             disabled={page <= 1}
             onClick={() => onPageChange?.(page - 1)}
           >
-            <ChevronLeft size={16} />
+            <FiChevronLeft size={16} />
           </button>
 
           {getPageNumbers(page, totalPages).map((p, i) =>
@@ -214,7 +214,7 @@ export default function TransactionTable({
             disabled={page >= totalPages}
             onClick={() => onPageChange?.(page + 1)}
           >
-            <ChevronRight size={16} />
+            <FiChevronRight size={16} />
           </button>
 
           <span className="transaction-table__page-info">

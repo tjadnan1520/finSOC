@@ -93,11 +93,11 @@ export default function CaseDetails({ caseData, userRole, onAssign, onAccept, on
             <div className="case-details-info-grid">
               <div className="case-details-info-item">
                 <span className="case-details-label">Provider</span>
-                <span className="case-details-value">{caseData.provider}</span>
+                <span className="case-details-value">{caseData.provider?.name || caseData.alert?.transaction?.provider?.name || '—'}</span>
               </div>
               <div className="case-details-info-item">
                 <span className="case-details-label">Area</span>
-                <span className="case-details-value">{caseData.area || '—'}</span>
+                <span className="case-details-value">{caseData.area?.name || caseData.area || '—'}</span>
               </div>
               <div className="case-details-info-item">
                 <span className="case-details-label">Created</span>
