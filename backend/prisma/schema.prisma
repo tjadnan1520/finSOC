@@ -34,10 +34,8 @@ enum AlertSeverity {
 enum AlertStatus {
   OPEN
   ASSIGNED
-  INVESTIGATING
   ESCALATED
   RESOLVED
-  CLOSED
 }
 
 enum CasePriority {
@@ -50,11 +48,8 @@ enum CasePriority {
 enum CaseStatus {
   OPEN
   ASSIGNED
-  ACCEPTED
-  INVESTIGATING
   ESCALATED
   RESOLVED
-  CLOSED
 }
 
 enum ProviderStatus {
@@ -160,6 +155,7 @@ model PhysicalCash {
 model Transaction {
   id              String   @id @default(uuid())
   referenceNumber String   @unique
+  phoneNumber     String?
   type            TxnType
   amount          Decimal
   providerId      String

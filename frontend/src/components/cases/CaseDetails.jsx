@@ -1,4 +1,4 @@
-import { FiShield, FiUser, FiCheckCircle, FiXCircle, FiArrowUpRight, FiFileText, FiMessageSquare } from 'react-icons/fi';
+import { FiShield, FiUser, FiCheckCircle, FiArrowUpRight, FiFileText, FiMessageSquare } from 'react-icons/fi';
 import { formatDateTime, formatRelativeTime, getSeverityColor, getStatusColor, getPriorityColor } from '../../utils/formatter';
 import { ROLES } from '../../utils/constants';
 import Button from '../common/Button';
@@ -52,7 +52,7 @@ function AISummaryCard({ caseData }) {
   );
 }
 
-export default function CaseDetails({ caseData, userRole, onAssign, onAccept, onResolve, onClose, onAddNote }) {
+export default function CaseDetails({ caseData, userRole, onAssign, onAccept, onResolve, onAddNote }) {
   if (!caseData) {
     return (
       <div className="case-details-empty">
@@ -63,12 +63,14 @@ export default function CaseDetails({ caseData, userRole, onAssign, onAccept, on
 
   const isOperator = userRole === ROLES.OPERATOR;
   const alert = caseData.alert || {};
+  const shortCaseId = caseData.id?.length > 8 ? `#${caseData.id.slice(0, 8).toUpperCase()}` : caseData.id;
+  const shortAlertId = alert.id?.length > 8 ? `#${alert.id.slice(0, 8).toUpperCase()}` : alert.id;
 
   return (
     <div className="case-details">
       <div className="case-details-header">
         <div className="case-details-header-left">
-          <h2 className="case-details-id">{caseData.id}</h2>
+          <h2 className="case-details-id">{shortCaseId}</h2>
           <div className="case-details-badges">
             <span
               className="case-details-priority"
@@ -115,7 +117,7 @@ export default function CaseDetails({ caseData, userRole, onAssign, onAccept, on
             <div className="case-details-info-grid">
               <div className="case-details-info-item">
                 <span className="case-details-label">Alert ID</span>
-                <span className="case-details-value">{alert.id || caseData.alertId || '—'}</span>
+                <span className="case-details-value">{shortAlertId || caseData.alertId || '—'}</span>
               </div>
               <div className="case-details-info-item">
                 <span className="case-details-label">Severity</span>
@@ -180,9 +182,6 @@ export default function CaseDetails({ caseData, userRole, onAssign, onAccept, on
             </Button>
             <Button variant="primary" size="sm" onClick={onResolve}>
               <FiCheckCircle size={14} /> Resolve
-            </Button>
-            <Button variant="danger" size="sm" onClick={onClose}>
-              <FiXCircle size={14} /> Close
             </Button>
           </>
         ) : userRole === ROLES.MANAGEMENT ? (

@@ -5,7 +5,13 @@ const AlertRepository = {
     return prisma.alert.create({
       data,
       include: {
-        transaction: true,
+        transaction: {
+          include: {
+            provider: true,
+            agent: true,
+            area: true,
+          },
+        },
         aiAnalysis: true,
       },
     });
@@ -32,7 +38,18 @@ const AlertRepository = {
             },
           },
           aiAnalysis: true,
-          case: true,
+          case: {
+            include: {
+              assignedTo: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  avatar: true,
+                },
+              },
+            },
+          },
         },
       }),
       prisma.alert.count({ where }),
@@ -61,7 +78,18 @@ const AlertRepository = {
           },
         },
         aiAnalysis: true,
-        case: true,
+        case: {
+          include: {
+            assignedTo: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatar: true,
+              },
+            },
+          },
+        },
         evidence: true,
       },
     });
@@ -78,15 +106,39 @@ const AlertRepository = {
     return prisma.alert.update({
       where: { id },
       data: {
+        status: 'ASSIGNED',
         case: {
           upsert: {
             create: {
               assignedToId: operatorId,
               priority: 'MEDIUM',
-              status: 'OPEN',
+              status: 'ASSIGNED',
             },
             update: {
               assignedToId: operatorId,
+              status: 'ASSIGNED',
+            },
+          },
+        },
+      },
+      include: {
+        transaction: {
+          include: {
+            provider: true,
+            agent: true,
+            area: true,
+          },
+        },
+        aiAnalysis: true,
+        case: {
+          include: {
+            assignedTo: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatar: true,
+              },
             },
           },
         },
@@ -101,6 +153,28 @@ const AlertRepository = {
         status: 'RESOLVED',
         resolvedAt: new Date(),
       },
+      include: {
+        transaction: {
+          include: {
+            provider: true,
+            agent: true,
+            area: true,
+          },
+        },
+        aiAnalysis: true,
+        case: {
+          include: {
+            assignedTo: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
     });
   },
 
@@ -108,8 +182,30 @@ const AlertRepository = {
     return prisma.alert.update({
       where: { id },
       data: {
-        status: 'CLOSED',
+        status: 'RESOLVED',
         resolvedAt: new Date(),
+      },
+      include: {
+        transaction: {
+          include: {
+            provider: true,
+            agent: true,
+            area: true,
+          },
+        },
+        aiAnalysis: true,
+        case: {
+          include: {
+            assignedTo: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatar: true,
+              },
+            },
+          },
+        },
       },
     });
   },

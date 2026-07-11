@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiDollarSign, FiArrowUpRight, FiArrowDownLeft, FiAlertCircle, FiBriefcase, FiBarChart2, FiUsers, FiFileText, FiSettings, FiGrid } from 'react-icons/fi';
+import { FiHome, FiDollarSign, FiAlertCircle, FiBriefcase, FiBarChart2, FiFileText, FiSettings, FiGrid } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 import { getSidebarMenu } from '../../utils/permissions';
 import './Sidebar.css';
@@ -10,7 +10,6 @@ const ICON_MAP = {
   AlertIcon: FiAlertCircle,
   CaseIcon: FiBriefcase,
   AnalyticsIcon: FiBarChart2,
-  ProviderIcon: FiUsers,
   ReportIcon: FiFileText,
   SettingsIcon: FiSettings,
 };

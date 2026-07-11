@@ -22,18 +22,17 @@ const assignCase = asyncHandler(async (req, res) => {
 });
 
 const acceptCase = asyncHandler(async (req, res) => {
-  const { caseId } = req.body;
-  const result = await cases.acceptCase(caseId, req.user.id);
+  const result = await cases.acceptCase(req.params.id, req.user.id);
   return successResponse(res, result, 'Case accepted');
 });
 
 const resolveCase = asyncHandler(async (req, res) => {
-  const result = await cases.resolveCase(req.params.id);
+  const result = await cases.resolveCase(req.params.id, req.user.id);
   return successResponse(res, result, 'Case resolved');
 });
 
 const closeCase = asyncHandler(async (req, res) => {
-  const result = await cases.closeCase(req.params.id);
+  const result = await cases.closeCase(req.params.id, req.user.id);
   return successResponse(res, result, 'Case closed');
 });
 

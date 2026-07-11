@@ -1,5 +1,5 @@
-import { FiShield, FiUser, FiCheckCircle, FiXCircle } from 'react-icons/fi';
-import { formatDateTime, formatRelativeTime, formatPercentage, getSeverityColor, getStatusColor } from '../../utils/formatter';
+import { FiShield, FiUser, FiCheckCircle } from 'react-icons/fi';
+import { formatDateTime, formatRelativeTime, getSeverityColor, getStatusColor } from '../../utils/formatter';
 import { ROLES } from '../../utils/constants';
 import Button from '../common/Button';
 import EvidenceList from './EvidenceList';
@@ -39,7 +39,7 @@ function Timeline({ events = [] }) {
   );
 }
 
-export default function AlertDetails({ alert, onAssign, onResolve, onClose, userRole }) {
+export default function AlertDetails({ alert, onAssign, onResolve, userRole }) {
   if (!alert) {
     return (
       <div className="alert-details-empty">
@@ -50,11 +50,13 @@ export default function AlertDetails({ alert, onAssign, onResolve, onClose, user
 
   const isOperator = userRole === ROLES.OPERATOR;
 
+  const shortId = alert.id?.length > 8 ? `#${alert.id.slice(0, 8).toUpperCase()}` : alert.id;
+
   return (
     <div className="alert-details">
       <div className="alert-details-header">
         <div className="alert-details-header-left">
-          <h2 className="alert-details-id">{alert.id}</h2>
+          <h2 className="alert-details-id">{shortId}</h2>
           <div className="alert-details-header-badges">
             <span
               className="alert-details-severity"
@@ -156,7 +158,7 @@ export default function AlertDetails({ alert, onAssign, onResolve, onClose, user
               <div className="alert-details-info-grid">
                 <div className="alert-details-info-item">
                   <span className="alert-details-label">Case ID</span>
-                  <span className="alert-details-value">{alert.caseId}</span>
+                  <span className="alert-details-value">{alert.caseId?.length > 8 ? `#${alert.caseId.slice(0, 8).toUpperCase()}` : alert.caseId}</span>
                 </div>
                 <div className="alert-details-info-item">
                   <span className="alert-details-label">Case Status</span>
@@ -184,9 +186,6 @@ export default function AlertDetails({ alert, onAssign, onResolve, onClose, user
           </Button>
           <Button variant="primary" size="sm" onClick={onResolve}>
             <FiCheckCircle size={14} /> Resolve
-          </Button>
-          <Button variant="danger" size="sm" onClick={onClose}>
-            <FiXCircle size={14} /> Close
           </Button>
         </div>
       )}

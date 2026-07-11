@@ -9,7 +9,7 @@ export function getCurrentDate() {
 
 export function getCurrentTime() {
   const d = new Date();
-  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
 export function getCurrentDateTime() {

@@ -49,6 +49,7 @@ export function formatTime(date) {
   return d.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
+    second: '2-digit',
   });
 }
 
@@ -62,6 +63,7 @@ export function formatDateTime(date) {
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    second: '2-digit',
   });
 }
 
@@ -102,11 +104,8 @@ export function getStatusColor(status) {
     CANCELLED: 'var(--color-text-light)',
     OPEN: 'var(--color-info)',
     ASSIGNED: 'var(--color-primary)',
-    ACCEPTED: 'var(--color-success)',
-    INVESTIGATING: 'var(--color-warning)',
     ESCALATED: 'var(--color-danger)',
     RESOLVED: 'var(--color-success)',
-    CLOSED: 'var(--color-text-light)',
   };
   return map[status] || 'var(--color-text-secondary)';
 }

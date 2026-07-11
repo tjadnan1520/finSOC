@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiAlertTriangle } from 'react-icons/fi';
 import useAuth from '../hooks/useAuth';
 import useAlerts from '../hooks/useAlerts';
-import { ROLES } from '../utils/constants';
 import Loader from '../components/common/Loader';
 import Button from '../components/common/Button';
 import AlertDetailsComponent from '../components/alerts/AlertDetails';
@@ -12,8 +11,8 @@ import './AlertDetails.css';
 export default function AlertDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { role } = useAuth();
-  const { getAlertDetails, assignAlert, resolveAlert, closeAlert } = useAlerts();
+  const { role, user } = useAuth();
+  const { getAlertDetails, assignAlert, resolveAlert } = useAlerts();
 
   const [alert, setAlert] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,10 +32,10 @@ export default function AlertDetails() {
   const handleBack = () => navigate('/alerts');
 
   const handleAssign = async () => {
-    if (!alert) return;
+    if (!alert || !user?.id) return;
     setActionLoading(true);
     try {
-      const updated = await assignAlert(alert.id, null);
+      const updated = await assignAlert(alert.id, user?.id);
       setAlert((prev) => ({ ...prev, ...updated }));
     } finally {
       setActionLoading(false);
@@ -49,17 +48,6 @@ export default function AlertDetails() {
     try {
       const updated = await resolveAlert(alert.id);
       setAlert((prev) => ({ ...prev, ...updated }));
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleClose = async () => {
-    if (!alert) return;
-    setActionLoading(true);
-    try {
-      await closeAlert(alert.id);
-      navigate('/alerts');
     } finally {
       setActionLoading(false);
     }
@@ -108,7 +96,6 @@ export default function AlertDetails() {
             userRole={role}
             onAssign={handleAssign}
             onResolve={handleResolve}
-            onClose={handleClose}
           />
           {actionLoading && <Loader overlay />}
         </div>

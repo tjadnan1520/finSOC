@@ -11,7 +11,7 @@ import './CaseDetails.css';
 export default function CaseDetails() {
   const { id } = useParams();
   const { role, user } = useAuth();
-  const { getCaseDetails, assignCase, acceptCase, resolveCase, closeCase, addNote } = useCases();
+  const { getCaseDetails, assignCase, acceptCase, resolveCase, addNote } = useCases();
   const [caseData, setCaseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -70,18 +70,6 @@ export default function CaseDetails() {
       setActionLoading(false);
     }
   }, [id, resolveCase]);
-
-  const handleClose = useCallback(async () => {
-    setActionLoading(true);
-    try {
-      await closeCase(id);
-      setCaseData(null);
-    } catch (err) {
-      setError(err?.response?.data?.message || 'Failed to close case');
-    } finally {
-      setActionLoading(false);
-    }
-  }, [id, closeCase]);
 
   const handleAddNote = useCallback(async (content) => {
     setActionLoading(true);
@@ -156,7 +144,6 @@ export default function CaseDetails() {
         onAssign={handleAssign}
         onAccept={handleAccept}
         onResolve={handleResolve}
-        onClose={handleClose}
         onAddNote={handleAddNote}
       />
     </div>

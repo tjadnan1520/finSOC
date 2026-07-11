@@ -12,10 +12,13 @@ const cashInValidation = [
     .isUUID()
     .withMessage('Provider ID must be a valid UUID'),
   body('agentId')
-    .notEmpty()
-    .withMessage('Agent ID is required')
+    .optional()
     .isUUID()
     .withMessage('Agent ID must be a valid UUID'),
+  body('areaId')
+    .optional()
+    .isUUID()
+    .withMessage('Area ID must be a valid UUID'),
   body('amount')
     .notEmpty()
     .withMessage('Amount is required')
@@ -25,6 +28,10 @@ const cashInValidation = [
     .optional()
     .isString()
     .withMessage('Reference number must be a string'),
+  body('phoneNumber')
+    .optional()
+    .isString()
+    .withMessage('Phone number must be a string'),
   body('remarks')
     .optional()
     .isString()
@@ -43,10 +50,13 @@ const cashOutValidation = [
     .isUUID()
     .withMessage('Provider ID must be a valid UUID'),
   body('agentId')
-    .notEmpty()
-    .withMessage('Agent ID is required')
+    .optional()
     .isUUID()
     .withMessage('Agent ID must be a valid UUID'),
+  body('areaId')
+    .optional()
+    .isUUID()
+    .withMessage('Area ID must be a valid UUID'),
   body('amount')
     .notEmpty()
     .withMessage('Amount is required')
@@ -56,6 +66,10 @@ const cashOutValidation = [
     .optional()
     .isString()
     .withMessage('Reference number must be a string'),
+  body('phoneNumber')
+    .optional()
+    .isString()
+    .withMessage('Phone number must be a string'),
   body('remarks')
     .optional()
     .isString()

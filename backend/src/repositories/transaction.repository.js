@@ -123,7 +123,10 @@ const TransactionRepository = {
       },
     };
 
-    const transactions = await prisma.transaction.findMany({ where });
+    const [transactions, physicalCash] = await Promise.all([
+      prisma.transaction.findMany({ where }),
+      prisma.physicalCash.findFirst(),
+    ]);
 
     let totalCashIn = 0;
     let totalCashOut = 0;
@@ -137,6 +140,10 @@ const TransactionRepository = {
     });
 
     return {
+      todayCashIn: totalCashIn,
+      todayCashOut: totalCashOut,
+      todayCount: transactions.length,
+      physicalCash: Number(physicalCash?.currentBalance || 0),
       totalCashIn,
       totalCashOut,
       totalTransactions: transactions.length,

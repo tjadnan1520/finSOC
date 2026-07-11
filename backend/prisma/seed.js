@@ -176,6 +176,7 @@ async function main() {
   const txn1 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00001',
+      phoneNumber: '+8801712000001',
       type: 'CASH_IN',
       amount: 500000,
       providerId: providers['BKASH'].id,
@@ -191,6 +192,7 @@ async function main() {
   const txn2 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00002',
+      phoneNumber: '+8801712000002',
       type: 'CASH_IN',
       amount: 320000,
       providerId: providers['NAGAD'].id,
@@ -206,6 +208,7 @@ async function main() {
   const txn3 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00003',
+      phoneNumber: '+8801712000003',
       type: 'CASH_IN',
       amount: 780000,
       providerId: providers['BKASH'].id,
@@ -221,6 +224,7 @@ async function main() {
   const txn4 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00004',
+      phoneNumber: '+8801712000004',
       type: 'CASH_IN',
       amount: 150000,
       providerId: providers['ROCKET'].id,
@@ -236,6 +240,7 @@ async function main() {
   const txn5 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00005',
+      phoneNumber: '+8801712000005',
       type: 'CASH_IN',
       amount: 920000,
       providerId: providers['NAGAD'].id,
@@ -253,6 +258,7 @@ async function main() {
   const txn6 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00006',
+      phoneNumber: '+8801712000006',
       type: 'CASH_OUT',
       amount: 200000,
       providerId: providers['BKASH'].id,
@@ -268,6 +274,7 @@ async function main() {
   const txn7 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00007',
+      phoneNumber: '+8801712000007',
       type: 'CASH_OUT',
       amount: 450000,
       providerId: providers['BKASH'].id,
@@ -283,6 +290,7 @@ async function main() {
   const txn8 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00008',
+      phoneNumber: '+8801712000008',
       type: 'CASH_OUT',
       amount: 110000,
       providerId: providers['ROCKET'].id,
@@ -300,6 +308,7 @@ async function main() {
   const txn9 = await prisma.transaction.create({
     data: {
       referenceNumber: 'TXN-2026-00009',
+      phoneNumber: '+8801712000009',
       type: 'CASH_IN',
       amount: 650000,
       providerId: providers['NAGAD'].id,
@@ -368,10 +377,11 @@ async function main() {
     data: {
       title: 'Liquidity Shortfall Warning - Dhaka',
       severity: 'MEDIUM',
-      status: 'OPEN',
+      status: 'ESCALATED',
       category: 'Liquidity',
       confidence: 0.76,
       description: 'Dhaka region projected to face liquidity shortfall within 48 hours',
+      transactionId: txn7.id,
       aiAnalysisId: aiAnalysis2.id,
       generatedAt: day(1),
     },
@@ -448,6 +458,23 @@ async function main() {
   });
 
   // ── Cases ──────────────────────────────────────────────────────────────────
+  const case0 = await prisma.case.create({
+    data: {
+      alertId: alert1.id,
+      priority: 'HIGH',
+      status: 'OPEN',
+    },
+  });
+
+  const caseEscalated = await prisma.case.create({
+    data: {
+      alertId: alert2.id,
+      priority: 'HIGH',
+      status: 'ESCALATED',
+      assignedToId: operator2.id,
+    },
+  });
+
   const case1 = await prisma.case.create({
     data: {
       alertId: alert3.id,
@@ -471,6 +498,15 @@ async function main() {
   // ── Assignments ────────────────────────────────────────────────────────────
   await prisma.assignment.create({
     data: {
+      caseId: caseEscalated.id,
+      operatorId: operator2.id,
+      assignedById: management.id,
+      assignedAt: day(1),
+    },
+  });
+
+  await prisma.assignment.create({
+    data: {
       caseId: case1.id,
       operatorId: operator1.id,
       assignedById: management.id,
@@ -489,6 +525,33 @@ async function main() {
   });
 
   // ── Timeline ───────────────────────────────────────────────────────────────
+  await prisma.timeline.create({
+    data: {
+      caseId: case0.id,
+      action: 'CASE_CREATED',
+      description: 'Open case created from alert: Unusual Transaction Volume',
+      actorId: management.id,
+      timestamp: day(1),
+    },
+  });
+  await prisma.timeline.create({
+    data: {
+      caseId: caseEscalated.id,
+      action: 'CASE_CREATED',
+      description: 'Case created from alert: Liquidity Shortfall Warning',
+      actorId: management.id,
+      timestamp: day(1),
+    },
+  });
+  await prisma.timeline.create({
+    data: {
+      caseId: caseEscalated.id,
+      action: 'ESCALATED',
+      description: 'Liquidity shortfall warning escalated for management review',
+      actorId: operator2.id,
+      timestamp: day(1),
+    },
+  });
   await prisma.timeline.create({
     data: {
       caseId: case1.id,

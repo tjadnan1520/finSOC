@@ -22,7 +22,7 @@ const updateStatusValidation = [
   body('status')
     .notEmpty()
     .withMessage('Status is required')
-    .isIn(['NEW', 'ASSIGNED', 'INVESTIGATING', 'ESCALATED', 'RESOLVED', 'DISMISSED'])
+    .isIn(['OPEN', 'ASSIGNED', 'ESCALATED', 'RESOLVED'])
     .withMessage('Status must be a valid alert status'),
 ];
 

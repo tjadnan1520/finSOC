@@ -28,9 +28,9 @@ const AnalyticsRepository = {
         _sum: { amount: true },
       }),
       prisma.alert.count(),
-      prisma.alert.count({ where: { status: { not: 'CLOSED' } } }),
+      prisma.alert.count({ where: { status: { not: 'RESOLVED' } } }),
       prisma.case.count(),
-      prisma.case.count({ where: { status: { not: 'CLOSED' } } }),
+      prisma.case.count({ where: { status: { not: 'RESOLVED' } } }),
       prisma.user.count(),
       prisma.provider.count(),
       prisma.liquiditySnapshot.findFirst({

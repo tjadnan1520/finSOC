@@ -8,7 +8,6 @@ const ACTION_ICONS = {
   ASSIGNED: FiUserPlus,
   ACCEPTED: FiCheckCircle,
   RESOLVED: FiCheckCircle,
-  CLOSED: FiCheckCircle,
   ESCALATED: FiArrowUpRight,
   NOTE_ADDED: FiMessageSquare,
 };
@@ -18,7 +17,6 @@ const ACTION_COLORS = {
   ASSIGNED: 'var(--color-warning)',
   ACCEPTED: 'var(--color-success)',
   RESOLVED: 'var(--color-success)',
-  CLOSED: 'var(--color-text-secondary)',
   ESCALATED: 'var(--color-danger)',
   NOTE_ADDED: 'var(--color-info)',
 };

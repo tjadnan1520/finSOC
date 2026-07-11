@@ -42,7 +42,6 @@ export function getSidebarMenu(role) {
         { label: 'Dashboard', path: '/dashboard', icon: 'DashboardIcon' },
         { label: 'Transactions', path: '/transactions', icon: 'TransactionIcon' },
         { label: 'Alerts', path: '/alerts', icon: 'AlertIcon' },
-        { label: 'Providers', path: '/providers', icon: 'ProviderIcon' },
         { label: 'Profile', path: '/profile', icon: 'SettingsIcon' },
       );
       break;
@@ -53,7 +52,6 @@ export function getSidebarMenu(role) {
         { label: 'Alerts', path: '/alerts', icon: 'AlertIcon' },
         { label: 'Cases', path: '/cases', icon: 'CaseIcon' },
         { label: 'Analytics', path: '/analytics', icon: 'AnalyticsIcon' },
-        { label: 'Providers', path: '/providers', icon: 'ProviderIcon' },
       );
       break;
 
@@ -63,7 +61,6 @@ export function getSidebarMenu(role) {
         { label: 'Analytics', path: '/analytics', icon: 'AnalyticsIcon' },
         { label: 'Alerts', path: '/alerts', icon: 'AlertIcon' },
         { label: 'Cases', path: '/cases', icon: 'CaseIcon' },
-        { label: 'Providers', path: '/providers', icon: 'ProviderIcon' },
         { label: 'Reports', path: '/reports', icon: 'ReportIcon' },
       );
       break;

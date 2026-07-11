@@ -21,13 +21,19 @@ const DashboardRepository = {
           take: 10,
           orderBy: { generatedAt: 'desc' },
           include: {
-            transaction: true,
+            transaction: {
+              include: {
+                provider: true,
+                agent: true,
+                area: true,
+              },
+            },
             aiAnalysis: true,
             case: true,
           },
         }),
         prisma.case.count({
-          where: { status: { not: 'CLOSED' } },
+          where: { status: { not: 'RESOLVED' } },
         }),
         prisma.notification.count({
           where: { read: false },
@@ -65,12 +71,18 @@ const DashboardRepository = {
           take: 10,
           orderBy: { generatedAt: 'desc' },
           include: {
-            transaction: true,
+            transaction: {
+              include: {
+                provider: true,
+                agent: true,
+                area: true,
+              },
+            },
             aiAnalysis: true,
           },
         }),
         prisma.case.count({
-          where: { status: { not: 'CLOSED' } },
+          where: { status: { not: 'RESOLVED' } },
         }),
         prisma.notification.count({
           where: { userId: agentId, read: false },
@@ -91,15 +103,21 @@ const DashboardRepository = {
     const [activeAlerts, assignedCases, recentAlerts, openCasesCount, notificationsCount] =
       await Promise.all([
         prisma.alert.findMany({
-          where: { status: { in: ['OPEN', 'INVESTIGATING'] } },
+          where: { status: { in: ['OPEN', 'ASSIGNED', 'ESCALATED'] } },
           orderBy: { generatedAt: 'desc' },
           include: {
-            transaction: true,
+            transaction: {
+              include: {
+                provider: true,
+                agent: true,
+                area: true,
+              },
+            },
             aiAnalysis: true,
           },
         }),
         prisma.case.findMany({
-          where: { assignedToId: { not: null }, status: { not: 'CLOSED' } },
+          where: { assignedToId: { not: null }, status: { not: 'RESOLVED' } },
           orderBy: { createdAt: 'desc' },
           include: {
             alert: true,
@@ -110,12 +128,18 @@ const DashboardRepository = {
           take: 10,
           orderBy: { generatedAt: 'desc' },
           include: {
-            transaction: true,
+            transaction: {
+              include: {
+                provider: true,
+                agent: true,
+                area: true,
+              },
+            },
             aiAnalysis: true,
           },
         }),
         prisma.case.count({
-          where: { status: { not: 'CLOSED' } },
+          where: { status: { not: 'RESOLVED' } },
         }),
         prisma.notification.count({
           where: { read: false },
@@ -160,13 +184,19 @@ const DashboardRepository = {
         take: 10,
         orderBy: { generatedAt: 'desc' },
         include: {
-          transaction: true,
+          transaction: {
+            include: {
+              provider: true,
+              agent: true,
+              area: true,
+            },
+          },
           aiAnalysis: true,
           case: true,
         },
       }),
       prisma.case.count({
-        where: { status: { not: 'CLOSED' } },
+        where: { status: { not: 'RESOLVED' } },
       }),
       prisma.notification.count({
         where: { read: false },

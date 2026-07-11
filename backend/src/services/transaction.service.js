@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const transactionRepository = require('../repositories/transaction.repository');
 const providerRepository = require('../repositories/provider.repository');
+const userRepository = require('../repositories/user.repository');
 const alertRepository = require('../repositories/alert.repository');
 const caseRepository = require('../repositories/case.repository');
 const notificationRepository = require('../repositories/notification.repository');
@@ -11,49 +12,68 @@ const forecastEngine = require('../engines/forecast.engine');
 const workflowEngine = require('../engines/workflow.engine');
 const aiService = require('./ai.service');
 const { getPagination, getPaginationMeta } = require('../utils/pagination');
-const { getCurrentTimestamp } = require('../utils/dateTime');
 const ApiError = require('../utils/apiError');
 
-const executeTransactionWorkflow = async ({ type, amount, providerId, agentId, areaId, remarks, createdById }) => {
+const executeTransactionWorkflow = async ({ type, amount, providerId, agentId, areaId, remarks, phoneNumber, referenceNumber, createdById }) => {
   try {
-    const referenceNumber = `TXN-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+    const amountNum = Number(amount);
+    if (!Number.isFinite(amountNum) || amountNum <= 0) {
+      throw new ApiError(400, 'Amount must be greater than 0');
+    }
+
+    const effectiveAgentId = agentId || createdById;
+    const agent = await userRepository.findById(effectiveAgentId);
+    if (!agent) throw new ApiError(404, 'Agent not found');
+
+    const effectiveAreaId = areaId || agent.areaId;
+    if (!effectiveAreaId) throw new ApiError(400, 'Area is required for this transaction');
+
+    const provider = await providerRepository.findById(providerId);
+    if (!provider) throw new ApiError(404, 'Provider not found');
+
+    const transactionReference = referenceNumber || `TXN-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+
+    const currentBalance = Number(provider.balance?.currentBalance || 0);
+    const availableBalance = Number(provider.balance?.availableBalance || 0);
+    const physicalCash = await providerRepository.getPhysicalCash();
+    const currentPhysicalCash = Number(physicalCash?.currentBalance || 0);
+
+    let newCurrentBalance;
+    let newAvailableBalance;
+    let newPhysicalCash;
+
+    if (type === 'CASH_IN') {
+      newCurrentBalance = currentBalance - amountNum;
+      newAvailableBalance = availableBalance - amountNum;
+      newPhysicalCash = currentPhysicalCash + amountNum;
+    } else {
+      newCurrentBalance = currentBalance + amountNum;
+      newAvailableBalance = availableBalance + amountNum;
+      newPhysicalCash = currentPhysicalCash - amountNum;
+    }
+
+    if (newCurrentBalance < 0 || newAvailableBalance < 0) throw new ApiError(400, 'Insufficient provider balance');
+    if (newPhysicalCash < 0) throw new ApiError(400, 'Insufficient physical cash');
 
     const transaction = await transactionRepository.create({
-      referenceNumber,
+      referenceNumber: transactionReference,
+      phoneNumber,
       type,
-      amount,
+      amount: amountNum,
       providerId,
-      agentId,
-      areaId,
+      agentId: effectiveAgentId,
+      areaId: effectiveAreaId,
       remarks,
       status: 'COMPLETED',
       createdById,
       completedAt: new Date(),
     });
 
-    const provider = await providerRepository.findById(providerId);
-    if (!provider) throw new ApiError(404, 'Provider not found');
-
-    const currentBalance = Number(provider.balance?.currentBalance || 0);
-    const availableBalance = Number(provider.balance?.availableBalance || 0);
-    const amountNum = Number(amount);
-
-    let newCurrentBalance;
-    let newAvailableBalance;
-    if (type === 'CASH_IN') {
-      newCurrentBalance = currentBalance + amountNum;
-      newAvailableBalance = availableBalance + amountNum;
-    } else {
-      newCurrentBalance = currentBalance - amountNum;
-      newAvailableBalance = availableBalance - amountNum;
-    }
-
-    if (newCurrentBalance < 0) throw new ApiError(400, 'Insufficient provider balance');
-
     await providerRepository.updateBalance(providerId, {
       currentBalance: newCurrentBalance,
       availableBalance: newAvailableBalance,
     });
+    await providerRepository.updatePhysicalCashBalance(newPhysicalCash);
 
     const providers = await providerRepository.findAll();
     const providerBalancesMap = {};
@@ -64,7 +84,7 @@ const executeTransactionWorkflow = async ({ type, amount, providerId, agentId, a
       }
     }
 
-    const physicalCashAmount = 0;
+    const physicalCashAmount = newPhysicalCash;
 
     const liquidityResult = liquidityEngine.calculateLiquidityScore({
       physicalCash: physicalCashAmount,
@@ -89,7 +109,7 @@ const executeTransactionWorkflow = async ({ type, amount, providerId, agentId, a
     });
 
     const aiData = {
-      transaction: { referenceNumber, type, amount: amountNum, providerId, agentId, areaId },
+      transaction: { referenceNumber: transactionReference, type, amount: amountNum, providerId, agentId: effectiveAgentId, areaId: effectiveAreaId },
       liquidity: {
         score: liquidityResult.liquidityScore,
         totalLiquidity: liquidityResult.totalLiquidity,
@@ -115,7 +135,7 @@ const executeTransactionWorkflow = async ({ type, amount, providerId, agentId, a
     } catch (error) {
       aiRecommendation = {
         summary: 'AI analysis temporarily unavailable',
-        reason: error.message,
+        reason: 'AI service is currently unavailable. Please try again later.',
         recommendation: 'Process transaction based on standard procedures',
         confidence: 0,
         uncertainty: 100,
@@ -140,7 +160,7 @@ const executeTransactionWorkflow = async ({ type, amount, providerId, agentId, a
         status: 'OPEN',
         category: riskResult.category,
         confidence: aiRecommendation?.confidence || 50,
-        description: `Transaction ${referenceNumber}: ${type} of ${amountNum} via ${provider.name}. Risk score: ${riskResult.riskScore}. Liquidity score: ${liquidityResult.liquidityScore}. ${aiRecommendation?.summary || ''}`,
+        description: `Transaction ${transactionReference}: ${type} of ${amountNum} via ${provider.name}. Risk score: ${riskResult.riskScore}. Liquidity score: ${liquidityResult.liquidityScore}. ${aiRecommendation?.summary || ''}`,
         transactionId: transaction.id,
         generatedAt: new Date(),
       };
@@ -156,9 +176,9 @@ const executeTransactionWorkflow = async ({ type, amount, providerId, agentId, a
       caseRecord = await caseRepository.create(caseData);
 
       await notificationRepository.create({
-        userId: agentId,
+        userId: effectiveAgentId,
         title: 'Alert Generated',
-        message: `Alert created for transaction ${referenceNumber} with ${riskResult.severity} severity`,
+        message: `Alert created for transaction ${transactionReference} with ${riskResult.severity} severity`,
         type: 'ALERT',
         link: `/alerts/${alert.id}`,
       });
@@ -171,7 +191,8 @@ const executeTransactionWorkflow = async ({ type, amount, providerId, agentId, a
       resourceId: transaction.id,
       oldValue: null,
       newValue: {
-        referenceNumber,
+        referenceNumber: transactionReference,
+        phoneNumber,
         type,
         amount: amountNum,
         providerId,

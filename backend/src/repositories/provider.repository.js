@@ -27,6 +27,35 @@ const ProviderRepository = {
     });
   },
 
+  async getPhysicalCash() {
+    return prisma.physicalCash.findFirst({
+      orderBy: { createdAt: 'asc' },
+    });
+  },
+
+  async updatePhysicalCashBalance(currentBalance) {
+    const existing = await prisma.physicalCash.findFirst({
+      orderBy: { createdAt: 'asc' },
+    });
+
+    if (!existing) {
+      return prisma.physicalCash.create({
+        data: {
+          currentBalance,
+          lastUpdatedAt: new Date(),
+        },
+      });
+    }
+
+    return prisma.physicalCash.update({
+      where: { id: existing.id },
+      data: {
+        currentBalance,
+        lastUpdatedAt: new Date(),
+      },
+    });
+  },
+
   async getStatistics(providerId) {
     const [transactionCount, totalAmounts] = await Promise.all([
       prisma.transaction.count({

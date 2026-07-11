@@ -6,7 +6,8 @@ const ApiError = require('../utils/apiError');
 const getCurrentLiquidity = async () => {
   try {
     const providers = await providerRepository.findAll();
-    let physicalCashAmount = 0;
+    const physicalCash = await providerRepository.getPhysicalCash();
+    let physicalCashAmount = Number(physicalCash?.currentBalance || 0);
     const providerBalancesMap = {};
 
     for (const provider of providers) {

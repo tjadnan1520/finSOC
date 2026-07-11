@@ -52,7 +52,7 @@ const CaseRepository = {
           },
           _count: {
             select: {
-              notes: true,
+              caseNotes: true,
               timeline: true,
             },
           },
@@ -97,7 +97,7 @@ const CaseRepository = {
             avatar: true,
           },
         },
-        notes: {
+        caseNotes: {
           orderBy: { createdAt: 'desc' },
           include: {
             author: {
@@ -148,11 +148,22 @@ const CaseRepository = {
     return caseRecord;
   },
 
-  async accept(id) {
+  async accept(id, operatorId) {
+    await prisma.assignment.updateMany({
+      where: {
+        caseId: id,
+        operatorId,
+        acceptedAt: null,
+      },
+      data: {
+        acceptedAt: new Date(),
+      },
+    });
+
     return prisma.case.update({
       where: { id },
       data: {
-        status: 'IN_PROGRESS',
+        status: 'ASSIGNED',
       },
     });
   },
@@ -171,7 +182,7 @@ const CaseRepository = {
     return prisma.case.update({
       where: { id },
       data: {
-        status: 'CLOSED',
+        status: 'RESOLVED',
         closedAt: new Date(),
       },
     });

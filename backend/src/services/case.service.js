@@ -23,14 +23,17 @@ const getCases = async (filters = {}, paginationOpts = {}) => {
 const getCaseById = async (id) => {
   const caseRecord = await caseRepository.findById(id);
   if (!caseRecord) throw new ApiError(404, 'Case not found');
-  return caseRecord;
+  return {
+    ...caseRecord,
+    notes: caseRecord.caseNotes || [],
+  };
 };
 
 const assignCase = async (caseId, operatorId, assignedById) => {
   const caseRecord = await caseRepository.findById(caseId);
   if (!caseRecord) throw new ApiError(404, 'Case not found');
-  if (caseRecord.status === 'RESOLVED' || caseRecord.status === 'CLOSED') {
-    throw new ApiError(400, 'Cannot assign a resolved or closed case');
+  if (caseRecord.status === 'RESOLVED') {
+    throw new ApiError(400, 'Cannot assign a resolved case');
   }
 
   await caseRepository.assign(caseId, operatorId, assignedById);
@@ -75,8 +78,8 @@ const acceptCase = async (caseId, operatorId) => {
     throw new ApiError(400, 'Case must be in ASSIGNED status to accept');
   }
 
-  await caseRepository.accept(caseId);
-  await caseRepository.updateStatus(caseId, 'IN_PROGRESS');
+  await caseRepository.accept(caseId, operatorId);
+  await caseRepository.updateStatus(caseId, 'ASSIGNED');
 
   await caseRepository.addTimelineEntry({
     caseId,
@@ -108,10 +111,10 @@ const addCaseNote = async (caseId, authorId, content) => {
   return note;
 };
 
-const resolveCase = async (caseId) => {
+const resolveCase = async (caseId, actorId) => {
   const caseRecord = await caseRepository.findById(caseId);
   if (!caseRecord) throw new ApiError(404, 'Case not found');
-  if (caseRecord.status === 'CLOSED') throw new ApiError(400, 'Cannot resolve a closed case');
+  if (caseRecord.status === 'RESOLVED') throw new ApiError(400, 'Case is already resolved');
 
   await caseRepository.resolve(caseId);
 
@@ -119,13 +122,13 @@ const resolveCase = async (caseId) => {
     caseId,
     action: 'RESOLVED',
     description: 'Case resolved',
-    actorId: undefined,
+    actorId,
   });
 
   return caseRepository.findById(caseId);
 };
 
-const closeCase = async (caseId) => {
+const closeCase = async (caseId, actorId) => {
   const caseRecord = await caseRepository.findById(caseId);
   if (!caseRecord) throw new ApiError(404, 'Case not found');
 
@@ -133,9 +136,9 @@ const closeCase = async (caseId) => {
 
   await caseRepository.addTimelineEntry({
     caseId,
-    action: 'CLOSED',
-    description: 'Case closed',
-    actorId: undefined,
+    action: 'RESOLVED',
+    description: 'Case marked as resolved',
+    actorId,
   });
 
   return caseRepository.findById(caseId);
