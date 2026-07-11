@@ -1,22 +1,23 @@
 const { PrismaClient } = require('@prisma/client');
+const { PrismaPg } = require('@prisma/adapter-pg');
 const config = require('./env');
 
-const prisma = globalThis.prisma || new PrismaClient({
-  log: config.app.env === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
-});
+let prisma;
 
 if (config.app.env === 'development') {
-  globalThis.prisma = prisma;
+  if (!globalThis.__prisma) {
+    const adapter = new PrismaPg({ connectionString: config.database.url });
+    globalThis.__prisma = new PrismaClient({ adapter });
+  }
+  prisma = globalThis.__prisma;
+} else {
+  const adapter = new PrismaPg({ connectionString: config.database.url });
+  prisma = new PrismaClient({ adapter });
 }
 
-process.on('SIGINT', async () => {
+async function disconnect() {
   await prisma.$disconnect();
-  process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-  await prisma.$disconnect();
-  process.exit(0);
-});
+}
 
 module.exports = prisma;
+module.exports.disconnect = disconnect;

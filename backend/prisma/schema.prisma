@@ -1,25 +1,23 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-enum Role {
+enum UserRole {
   AGENT
   OPERATOR
   MANAGEMENT
 }
 
-enum TransactionType {
+enum TxnType {
   CASH_IN
   CASH_OUT
 }
 
-enum TransactionStatus {
+enum TxnStatus {
   PENDING
   COMPLETED
   FAILED
@@ -72,7 +70,7 @@ enum NotificationType {
   SYSTEM
 }
 
-enum UserStatus {
+enum UserAccountStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
@@ -80,7 +78,7 @@ enum UserStatus {
 
 model Role {
   id          String   @id @default(uuid())
-  name        Role     @unique
+  name        UserRole
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -88,95 +86,95 @@ model Role {
 }
 
 model User {
-  id          String           @id @default(uuid())
-  name        String
-  email       String           @unique
-  password    String
-  phone       String?
-  avatar      String?
-  roleId      String
-  role        Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  areaId      String
-  area        Area             @relation(fields: [areaId], references: [id], onDelete: Cascade)
-  status      UserStatus       @default(ACTIVE)
-  lastLoginAt DateTime?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  transactionsAsAgent      Transaction[]  @relation("TransactionAgent")
-  transactionsAsCreator    Transaction[]  @relation("TransactionCreator")
-  assignedCases            Case[]         @relation("CaseAssignee")
-  assignmentsAsOperator    Assignment[]   @relation("AssignmentOperator")
-  assignmentsAsAssigner    Assignment[]   @relation("AssignmentAssigner")
-  timelineEntries          Timeline[]
-  caseNotes                CaseNote[]
-  notifications            Notification[]
-  auditLogs                AuditLog[]
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  password       String
+  phone          String?
+  avatar         String?
+  roleId         String
+  role           Role            @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  areaId         String
+  area           Area            @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  status         UserAccountStatus @default(ACTIVE)
+  lastLoginAt    DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  transactionsAsAgent   Transaction[] @relation("TransactionAgent")
+  transactionsAsCreator Transaction[] @relation("TransactionCreator")
+  assignedCases         Case[]        @relation("CaseAssignee")
+  assignmentsAsOperator Assignment[]  @relation("AssignmentOperator")
+  assignmentsAsAssigner Assignment[]  @relation("AssignmentAssigner")
+  timelineEntries       Timeline[]
+  caseNotes             CaseNote[]
+  notifications         Notification[]
+  auditLogs             AuditLog[]
 
   @@index([email])
   @@index([status])
 }
 
 model Area {
-  id          String       @id @default(uuid())
-  name        String       @unique
-  code        String?
-  description String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  users       User[]
+  id           String        @id @default(uuid())
+  name         String        @unique
+  code         String?
+  description  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  users        User[]
   transactions Transaction[]
 }
 
 model Provider {
-  id          String           @id @default(uuid())
-  name        String           @unique
-  code        String           @unique
-  logo        String?
-  status      ProviderStatus   @default(ACTIVE)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  balance     ProviderBalance?
+  id           String          @id @default(uuid())
+  name         String          @unique
+  code         String          @unique
+  logo         String?
+  status       ProviderStatus  @default(ACTIVE)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  balance      ProviderBalance?
   transactions Transaction[]
 }
 
 model ProviderBalance {
-  id                String    @id @default(uuid())
-  providerId        String    @unique
-  provider          Provider  @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  currentBalance    Decimal   @default(0)
-  availableBalance  Decimal   @default(0)
-  reservedBalance   Decimal   @default(0)
-  lastUpdatedAt     DateTime  @default(now())
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id               String   @id @default(uuid())
+  providerId       String   @unique
+  provider         Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  currentBalance   Decimal  @default(0)
+  availableBalance Decimal  @default(0)
+  reservedBalance  Decimal  @default(0)
+  lastUpdatedAt    DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model PhysicalCash {
-  id              String    @id @default(uuid())
-  currentBalance  Decimal   @default(0)
-  lastUpdatedAt   DateTime  @default(now())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String   @id @default(uuid())
+  currentBalance Decimal  @default(0)
+  lastUpdatedAt  DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Transaction {
-  id              String            @id @default(uuid())
-  referenceNumber String            @unique
-  type            TransactionType
+  id              String   @id @default(uuid())
+  referenceNumber String   @unique
+  type            TxnType
   amount          Decimal
   providerId      String
-  provider        Provider          @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  provider        Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
   agentId         String
-  agent           User              @relation("TransactionAgent", fields: [agentId], references: [id], onDelete: Cascade)
+  agent           User     @relation("TransactionAgent", fields: [agentId], references: [id], onDelete: Cascade)
   areaId          String
-  area            Area              @relation(fields: [areaId], references: [id], onDelete: Cascade)
-  status          TransactionStatus @default(PENDING)
+  area            Area     @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  status          TxnStatus @default(PENDING)
   remarks         String?
   createdById     String
-  createdBy       User              @relation("TransactionCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy       User     @relation("TransactionCreator", fields: [createdById], references: [id], onDelete: Cascade)
   completedAt     DateTime?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   alerts          Alert[]
 
   @@index([referenceNumber])
@@ -185,14 +183,14 @@ model Transaction {
 }
 
 model LiquiditySnapshot {
-  id                String   @id @default(uuid())
-  physicalCash      Decimal  @default(0)
-  providerBalances  Decimal  @default(0)
-  totalLiquidity    Decimal  @default(0)
-  liquidityScore    Float
-  timestamp         DateTime @default(now())
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id               String   @id @default(uuid())
+  physicalCash     Decimal  @default(0)
+  providerBalances Decimal  @default(0)
+  totalLiquidity   Decimal  @default(0)
+  liquidityScore   Float
+  timestamp        DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model Forecast {
@@ -207,17 +205,17 @@ model Forecast {
 }
 
 model AIAnalysis {
-  id            String   @id @default(uuid())
-  summary       String
-  reason        String?
+  id             String  @id @default(uuid())
+  summary        String
+  reason         String?
   recommendation String?
-  confidence    Float
-  uncertainty   Float?
-  promptVersion String?
-  modelVersion  String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  alerts        Alert[]
+  confidence     Float
+  uncertainty    Float?
+  promptVersion  String?
+  modelVersion   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  alerts         Alert[]
 }
 
 model Alert {
@@ -257,37 +255,37 @@ model Evidence {
 }
 
 model Case {
-  id            String       @id @default(uuid())
-  alertId       String       @unique
-  alert         Alert        @relation(fields: [alertId], references: [id], onDelete: Cascade)
-  priority      CasePriority @default(MEDIUM)
-  status        CaseStatus   @default(OPEN)
-  assignedToId  String?
-  assignedTo    User?        @relation("CaseAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
-  resolvedAt    DateTime?
-  closedAt      DateTime?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  assignments   Assignment[]
-  timeline      Timeline[]
-  caseNotes     CaseNote[]
+  id           String       @id @default(uuid())
+  alertId      String       @unique
+  alert        Alert        @relation(fields: [alertId], references: [id], onDelete: Cascade)
+  priority     CasePriority @default(MEDIUM)
+  status       CaseStatus   @default(OPEN)
+  assignedToId String?
+  assignedTo   User?        @relation("CaseAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  resolvedAt   DateTime?
+  closedAt     DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  assignments  Assignment[]
+  timeline     Timeline[]
+  caseNotes    CaseNote[]
 
   @@index([status])
   @@index([priority])
 }
 
 model Assignment {
-  id            String    @id @default(uuid())
-  caseId        String
-  case          Case      @relation(fields: [caseId], references: [id], onDelete: Cascade)
-  operatorId    String
-  operator      User      @relation("AssignmentOperator", fields: [operatorId], references: [id], onDelete: Cascade)
-  assignedById  String
-  assignedBy    User      @relation("AssignmentAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
-  assignedAt    DateTime  @default(now())
-  acceptedAt    DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id           String   @id @default(uuid())
+  caseId       String
+  case         Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  operatorId   String
+  operator     User     @relation("AssignmentOperator", fields: [operatorId], references: [id], onDelete: Cascade)
+  assignedById String
+  assignedBy   User     @relation("AssignmentAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
+  assignedAt   DateTime @default(now())
+  acceptedAt   DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Timeline {
@@ -323,8 +321,8 @@ model Notification {
   type      NotificationType
   read      Boolean          @default(false)
   link      String?
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
 
   @@index([createdAt])
   @@index([userId])
