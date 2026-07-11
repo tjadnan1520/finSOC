@@ -1,0 +1,23 @@
+.footer {
+  padding: 16px 24px;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.footer-text strong {
+  color: var(--color-text);
+}
+
+.footer-separator {
+  margin: 0 8px;
+  color: var(--color-border);
+}

@@ -1,0 +1,131 @@
+.liquidity-overview {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.liquidity-overview__empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+  padding: 32px;
+}
+
+.liquidity-overview__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 20px;
+}
+
+.liquidity-overview__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.liquidity-overview__score {
+  flex-shrink: 0;
+}
+
+.liquidity-progress__text {
+  font-size: 18px;
+  font-weight: 700;
+  fill: var(--color-text);
+}
+
+.liquidity-overview__details {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.liquidity-overview__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.liquidity-overview__label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.liquidity-overview__amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.liquidity-overview__providers {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.liquidity-overview__provider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.liquidity-overview__provider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.liquidity-overview__provider-name {
+  color: var(--color-text-secondary);
+  flex: 1;
+}
+
+.liquidity-overview__provider-balance {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.liquidity-status {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.liquidity-status--healthy {
+  background: rgba(52, 168, 83, 0.1);
+  color: var(--color-success);
+}
+
+.liquidity-status--moderate {
+  background: rgba(251, 188, 4, 0.15);
+  color: var(--color-warning);
+}
+
+.liquidity-status--low {
+  background: rgba(251, 188, 4, 0.15);
+  color: #e37400;
+}
+
+.liquidity-status--critical {
+  background: rgba(234, 67, 53, 0.1);
+  color: var(--color-danger);
+}
+
+@media (max-width: 640px) {
+  .liquidity-overview__body {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

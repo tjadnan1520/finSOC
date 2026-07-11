@@ -1,0 +1,117 @@
+.recent-alerts {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.recent-alerts__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.recent-alerts__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.recent-alerts__view-all {
+  font-size: 13px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.recent-alerts__view-all:hover {
+  text-decoration: underline;
+}
+
+.recent-alerts__table-wrapper {
+  overflow-x: auto;
+}
+
+.recent-alerts__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.recent-alerts__table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.recent-alerts__table td {
+  padding: 10px 12px;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.recent-alerts__table tr:last-child td {
+  border-bottom: none;
+}
+
+.recent-alerts__table tr:hover td {
+  background: var(--color-bg);
+}
+
+.recent-alerts__id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.recent-alerts__title-text {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-alerts__severity {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--severity-color) 12%, transparent);
+  color: var(--severity-color);
+}
+
+.recent-alerts__status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--status-color) 12%, transparent);
+  color: var(--status-color);
+}
+
+.recent-alerts__time {
+  color: var(--color-text-secondary);
+}
+
+.recent-alerts__view {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.recent-alerts__empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+  padding: 32px;
+}

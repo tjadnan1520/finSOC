@@ -1,0 +1,130 @@
+.ai-recommendation {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--color-primary);
+}
+
+.ai-recommendation__empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+  padding: 24px;
+  margin: 0;
+}
+
+.ai-recommendation__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.ai-recommendation__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.ai-recommendation__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.ai-recommendation__summary {
+  font-size: 14px;
+  color: var(--color-text);
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+.ai-recommendation__section {
+  margin-bottom: 16px;
+}
+
+.ai-recommendation__section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 6px;
+}
+
+.ai-recommendation__text {
+  font-size: 14px;
+  color: var(--color-text);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ai-recommendation__highlight {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.ai-recommendation__confidence {
+  margin-bottom: 12px;
+}
+
+.ai-recommendation__confidence-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.ai-recommendation__confidence-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.ai-recommendation__confidence-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.ai-recommendation__confidence-bar {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.ai-recommendation__confidence-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.ai-recommendation__uncertainty {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  padding: 8px 12px;
+  background: rgba(251, 188, 4, 0.08);
+  border-radius: var(--radius-sm);
+}
+
+.ai-recommendation__uncertainty-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--color-warning);
+}

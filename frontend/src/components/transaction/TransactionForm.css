@@ -1,0 +1,35 @@
+.transaction-form {
+  max-width: 560px;
+}
+
+.transaction-form__card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.transaction-form__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 20px;
+}
+
+.transaction-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.transaction-form__actions {
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .transaction-form__actions {
+    flex-direction: column;
+  }
+}

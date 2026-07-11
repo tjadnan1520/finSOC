@@ -1,0 +1,85 @@
+.forecast-chart-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.forecast-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.forecast-chart-title {
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.forecast-confidence {
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.forecast-confidence--high {
+  background: rgba(52, 168, 83, 0.12);
+  color: var(--color-success);
+}
+
+.forecast-confidence--medium {
+  background: rgba(251, 188, 4, 0.15);
+  color: #b8860b;
+}
+
+.forecast-confidence--low {
+  background: rgba(234, 67, 53, 0.12);
+  color: var(--color-danger);
+}
+
+.forecast-chart-wrapper {
+  flex: 1;
+  min-height: 0;
+}
+
+.forecast-chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  font-family: var(--font-family);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.forecast-tooltip {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 10px 14px;
+  font-family: var(--font-family);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.forecast-tooltip-label {
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 4px;
+}
+
+.forecast-tooltip-value {
+  margin: 0;
+}
